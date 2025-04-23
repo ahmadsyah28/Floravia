@@ -1,0 +1,22 @@
+# Virtual environment
+venv/
+env/
+.venv/
+.env
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Django SQLite database (jika pakai)
+db.sqlite3
+
+# VSCode dan IDE
+.vscode/
+.idea/
+
+# Sistem file
+.DS_Store
+Thumbs.db

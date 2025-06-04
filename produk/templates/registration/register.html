@@ -1,234 +1,514 @@
 <!-- produk/templates/registration/register.html -->
 {% extends 'produk/base.html' %}
 
+{% block title %}Daftar - Floravia{% endblock %}
+
 {% block extra_css %}
 <style>
-  :root {
-    --primary-color: #2ecc71;
-    --secondary-color: #27ae60;
-    --background-color: #f4f6f7;
-    --text-color: #2c3e50;
-    --error-color: #e74c3c;
-  }
-
-  body {
-    background-color: var(--background-color);
-    font-family: 'Inter', 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-  }
-
-  .auth-container {
-    max-width: 450px;
-    margin: 3rem auto;
-    background-color: white;
-    padding: 2.5rem;
-    border-radius: 12px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-    position: relative;
-    overflow: hidden;
-    border: 1px solid rgba(0, 0, 0, 0.05);
-    transition: all 0.3s ease;
-  }
-
-  .auth-container::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 5px;
-    background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
-  }
-
-  .auth-container:hover {
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
-    transform: translateY(-5px);
-  }
-
-  .auth-header {
-    text-align: center;
-    margin-bottom: 2.5rem;
-    color: var(--text-color);
-  }
-
-  .auth-header h1 {
-    font-weight: 700;
-    margin-bottom: 0.8rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-  }
-
-  .auth-header h1 span {
-    font-size: 2.5rem;
-    margin-right: 10px;
-  }
-
-  .form-group {
-    margin-bottom: 1.5rem;
-    position: relative;
-  }
-
-  .form-group label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 600;
-    color: var(--text-color);
-    transition: color 0.3s ease;
-  }
-
-  .form-control {
-    width: 100%;
-    padding: 0.75rem 1rem;
-    border: 2px solid rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    font-family: inherit;
-    transition: all 0.3s ease;
-    background-color: #f9f9f9;
-    font-size: 0.95rem;
-  }
-
-  .form-control:focus {
-    outline: none;
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(46, 204, 113, 0.1);
-    background-color: white;
-  }
-
-  .btn-auth {
-    width: 100%;
-    background-color: var(--primary-color);
-    color: white;
-    padding: 1rem;
-    border: none;
-    border-radius: 8px;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-
-  .btn-auth:hover {
-    background-color: var(--secondary-color);
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(46, 204, 113, 0.3);
-  }
-
-  .auth-links {
-    text-align: center;
-    margin-top: 2rem;
-    padding-top: 1.5rem;
-    border-top: 1px solid rgba(0, 0, 0, 0.1);
-  }
-
-  .auth-links a {
-    color: var(--primary-color);
-    text-decoration: none;
-    font-weight: 600;
-    transition: color 0.3s ease;
-  }
-
-  .auth-links a:hover {
-    color: var(--secondary-color);
-    text-decoration: underline;
-  }
-
-  .error-message {
-    color: var(--error-color);
-    font-size: 0.85rem;
-    margin-top: 0.5rem;
-    animation: fadeIn 0.3s ease;
-  }
-
-  .help-text {
-    font-size: 0.8rem;
-    color: #7f8c8d;
-    margin-top: 0.5rem;
-    font-style: italic;
-  }
-
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-10px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  @media (max-width: 480px) {
-    .auth-container {
-      margin: 1rem;
-      padding: 1.5rem;
-      width: calc(100% - 2rem);
+    body {
+        background: linear-gradient(135deg, #4ad785 0%, #3ab07f 100%);
+        min-height: 100vh;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
-  }
+
+    .auth-container {
+        max-width: 450px;
+        margin: 3rem auto;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        padding: 3rem 2.5rem;
+        border-radius: 20px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1), 0 10px 20px rgba(0, 0, 0, 0.05);
+        position: relative;
+        overflow: hidden;
+        animation: slideUp 0.6s ease-out;
+    }
+
+    .auth-container::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #4c956c, #2c6e49, #68b683);
+        background-size: 200% 100%;
+        animation: gradientShift 3s ease infinite;
+    }
+
+    .auth-container::after {
+        content: '🌿';
+        position: absolute;
+        top: -10px;
+        right: 20px;
+        font-size: 2rem;
+        opacity: 0.1;
+        transform: rotate(15deg);
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes gradientShift {
+        0%, 100% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+    }
+
+    .auth-header {
+        text-align: center;
+        margin-bottom: 2.5rem;
+        position: relative;
+    }
+
+    .auth-header h1 {
+        color: #2c6e49;
+        font-size: 2rem;
+        font-weight: 700;
+        margin: 0 0 0.5rem 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+
+    .auth-header p {
+        color: #666;
+        margin: 0;
+        font-size: 1rem;
+        font-weight: 400;
+    }
+
+    .form-group {
+        margin-bottom: 2rem;
+        position: relative;
+    }
+
+    .form-group label {
+        position: absolute;
+        left: 1rem;
+        top: 1rem;
+        color: #999;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        pointer-events: none;
+        background: transparent;
+        z-index: 1;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 1rem 1rem 1rem 1rem;
+        border: 2px solid #e1e5e9;
+        border-radius: 12px;
+        font-family: inherit;
+        font-size: 1rem;
+        background: #fafbfc;
+        transition: all 0.3s ease;
+        box-sizing: border-box;
+        position: relative;
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: #4c956c;
+        background: white;
+        box-shadow: 0 0 0 4px rgba(76, 149, 108, 0.1);
+        transform: translateY(-2px);
+    }
+
+    .form-control:focus + label,
+    .form-control:not(:placeholder-shown) + label {
+        top: -0.5rem;
+        left: 0.8rem;
+        font-size: 0.8rem;
+        color: #4c956c;
+        background: white;
+        padding: 0 0.4rem;
+        font-weight: 600;
+    }
+
+    .btn-auth {
+        width: 100%;
+        background: linear-gradient(135deg, #4c956c 0%, #2c6e49 100%);
+        color: white;
+        padding: 1.2rem;
+        border: none;
+        border-radius: 12px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .btn-auth::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+        transition: left 0.5s;
+    }
+
+    .btn-auth:hover {
+        background: linear-gradient(135deg, #68b683 0%, #4c956c 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(76, 149, 108, 0.3);
+    }
+
+    .btn-auth:hover::before {
+        left: 100%;
+    }
+
+    .btn-auth:active {
+        transform: translateY(0);
+    }
+
+    .auth-links {
+        text-align: center;
+        margin-top: 2rem;
+        padding-top: 2rem;
+        border-top: 1px solid #e1e5e9;
+        position: relative;
+    }
+
+    .auth-links::before {
+        content: '✨';
+        position: absolute;
+        top: -0.5rem;
+        left: 50%;
+        transform: translateX(-50%);
+        background: white;
+        padding: 0 1rem;
+        color: #4c956c;
+    }
+
+    .auth-links p {
+        margin: 0.8rem 0;
+        color: #666;
+    }
+
+    .auth-links a {
+        color: #4c956c;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        position: relative;
+    }
+
+    .auth-links a::after {
+        content: '';
+        position: absolute;
+        width: 0;
+        height: 2px;
+        bottom: -2px;
+        left: 0;
+        background: linear-gradient(90deg, #4c956c, #2c6e49);
+        transition: width 0.3s ease;
+    }
+
+    .auth-links a:hover {
+        color: #2c6e49;
+        transform: translateY(-1px);
+    }
+
+    .auth-links a:hover::after {
+        width: 100%;
+    }
+
+    .error-message {
+        color: #e74c3c;
+        font-size: 0.9rem;
+        margin-top: 0.5rem;
+        padding: 0.5rem 1rem;
+        background: rgba(231, 76, 60, 0.1);
+        border-radius: 8px;
+        border-left: 4px solid #e74c3c;
+        animation: shake 0.5s ease-in-out;
+    }
+
+    .help-text {
+        color: #666;
+        font-size: 0.8rem;
+        margin-top: 0.5rem;
+        padding: 0.5rem;
+        background: #f8f9fa;
+        border-radius: 6px;
+        border-left: 3px solid #4c956c;
+    }
+
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-5px); }
+        75% { transform: translateX(5px); }
+    }
+
+    /* Floating decoration elements */
+    .decoration {
+        position: absolute;
+        color: rgba(76, 149, 108, 0.1);
+        font-size: 3rem;
+        pointer-events: none;
+        animation: float 6s ease-in-out infinite;
+    }
+
+    .decoration:nth-child(1) {
+        top: 10%;
+        left: 10%;
+        animation-delay: 0s;
+    }
+
+    .decoration:nth-child(2) {
+        top: 80%;
+        right: 10%;
+        animation-delay: 2s;
+    }
+
+    .decoration:nth-child(3) {
+        top: 50%;
+        left: 5%;
+        animation-delay: 4s;
+    }
+
+    @keyframes float {
+        0%, 100% { transform: translateY(0px) rotate(0deg); }
+        50% { transform: translateY(-20px) rotate(5deg); }
+    }
+
+    /* Responsive design */
+    @media (max-width: 480px) {
+        .auth-container {
+            margin: 1rem;
+            padding: 2rem 1.5rem;
+        }
+        
+        .auth-header h1 {
+            font-size: 1.8rem;
+        }
+    }
+
+    /* Password strength indicator */
+    .password-strength {
+        height: 4px;
+        margin-top: 0.5rem;
+        border-radius: 2px;
+        transition: all 0.3s ease;
+        background: #e1e5e9;
+    }
+
+    .password-strength.weak {
+        background: #e74c3c;
+        width: 33.33%;
+    }
+
+    .password-strength.medium {
+        background: #f39c12;
+        width: 66.66%;
+    }
+
+    .password-strength.strong {
+        background: #2ecc71;
+        width: 100%;
+    }
+
+    .password-strength-text {
+        font-size: 0.8rem;
+        margin-top: 0.5rem;
+        text-align: right;
+    }
+
+    .password-strength-text.weak { color: #e74c3c; }
+    .password-strength-text.medium { color: #f39c12; }
+    .password-strength-text.strong { color: #2ecc71; }
 </style>
 {% endblock %}
 
-{% block title %}Daftar - Floravia{% endblock %}
-
 {% block content %}
+<div class="decoration">🌸</div>
+<div class="decoration">🌺</div>
+<div class="decoration">🌿</div>
+
 <div class="auth-container">
-  <div class="auth-header">
-    <h1>
-      <span>📝</span> Daftar
-    </h1>
-    <p>Buat akun Floravia baru</p>
-  </div>
-
-  <form method="post">
-    {% csrf_token %}
-
-    <div class="form-group">
-      <label for="{{ form.username.id_for_label }}">Username</label>
-      {{ form.username }} 
-      {% if form.username.errors %}
-      <div class="error-message">
-        {% for error in form.username.errors %}{{ error }}{% endfor %}
-      </div>
-      {% endif %} 
-      {% if form.username.help_text %}
-      <div class="help-text">{{ form.username.help_text }}</div>
-      {% endif %}
+    <div class="auth-header">
+        <h1>
+            <span style="background: linear-gradient(45deg, #4c956c, #2c6e49); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">🌸</span>
+            Daftar
+        </h1>
+        <p>Buat akun Floravia baru</p>
     </div>
 
-    <div class="form-group">
-      <label for="{{ form.password1.id_for_label }}">Password</label>
-      {{ form.password1 }} 
-      {% if form.password1.errors %}
-      <div class="error-message">
-        {% for error in form.password1.errors %}{{ error }}{% endfor %}
-      </div>
-      {% endif %} 
-      {% if form.password1.help_text %}
-      <div class="help-text">{{ form.password1.help_text }}</div>
-      {% endif %}
+    <form method="post" id="registerForm">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <input type="text" 
+                   name="{{ form.username.name }}" 
+                   id="{{ form.username.id_for_label }}"
+                   class="form-control" 
+                   placeholder=" "
+                   required>
+            <label for="{{ form.username.id_for_label }}">Username</label>
+            {% if form.username.errors %}
+                <div class="error-message">
+                    {% for error in form.username.errors %}{{ error }}{% endfor %}
+                </div>
+            {% endif %}
+            {% if form.username.help_text %}
+                <div class="help-text">{{ form.username.help_text }}</div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <input type="password" 
+                   name="{{ form.password1.name }}" 
+                   id="{{ form.password1.id_for_label }}"
+                   class="form-control" 
+                   placeholder=" "
+                   required>
+            <label for="{{ form.password1.id_for_label }}">Password</label>
+            <div class="password-strength"></div>
+            <div class="password-strength-text"></div>
+            {% if form.password1.errors %}
+                <div class="error-message">
+                    {% for error in form.password1.errors %}{{ error }}{% endfor %}
+                </div>
+            {% endif %}
+            {% if form.password1.help_text %}
+                <div class="help-text">{{ form.password1.help_text }}</div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <input type="password" 
+                   name="{{ form.password2.name }}" 
+                   id="{{ form.password2.id_for_label }}"
+                   class="form-control" 
+                   placeholder=" "
+                   required>
+            <label for="{{ form.password2.id_for_label }}">Konfirmasi Password</label>
+            {% if form.password2.errors %}
+                <div class="error-message">
+                    {% for error in form.password2.errors %}{{ error }}{% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        {% if form.non_field_errors %}
+            <div class="error-message">
+                {% for error in form.non_field_errors %}{{ error }}{% endfor %}
+            </div>
+        {% endif %}
+
+        <button type="submit" class="btn-auth" onclick="this.classList.add('loading')">
+            Daftar
+        </button>
+    </form>
+
+    <div class="auth-links">
+        <p>Sudah punya akun? <a href="{% url 'login' %}">Login di sini</a></p>
+        <p><a href="{% url 'homepage' %}">← Kembali ke Homepage</a></p>
     </div>
-
-    <div class="form-group">
-      <label for="{{ form.password2.id_for_label }}">Konfirmasi Password</label>
-      {{ form.password2 }} 
-      {% if form.password2.errors %}
-      <div class="error-message">
-        {% for error in form.password2.errors %}{{ error }}{% endfor %}
-      </div>
-      {% endif %} 
-      {% if form.password2.help_text %}
-      <div class="help-text">{{ form.password2.help_text }}</div>
-      {% endif %}
-    </div>
-
-    {% if form.non_field_errors %}
-    <div class="error-message">
-      {% for error in form.non_field_errors %}{{ error }}{% endfor %}
-    </div>
-    {% endif %}
-
-    <button type="submit" class="btn-auth">Daftar</button>
-  </form>
-
-  <div class="auth-links">
-    <p>Sudah punya akun? <a href="{% url 'login' %}">Login di sini</a></p>
-    <p><a href="{% url 'homepage' %}">← Kembali ke Homepage</a></p>
-  </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('registerForm');
+    const inputs = form.querySelectorAll('.form-control');
+    const password1Input = document.getElementById('{{ form.password1.id_for_label }}');
+    const password2Input = document.getElementById('{{ form.password2.id_for_label }}');
+    const strengthBar = document.querySelector('.password-strength');
+    const strengthText = document.querySelector('.password-strength-text');
+    
+    // Password strength checker
+    function checkPasswordStrength(password) {
+        let strength = 0;
+        
+        if (password.length >= 8) strength++;
+        if (password.match(/[a-z]/) && password.match(/[A-Z]/)) strength++;
+        if (password.match(/\d/)) strength++;
+        if (password.match(/[^a-zA-Z\d]/)) strength++;
+        
+        switch(strength) {
+            case 0:
+            case 1:
+                strengthBar.className = 'password-strength weak';
+                strengthText.className = 'password-strength-text weak';
+                strengthText.textContent = 'Password lemah';
+                break;
+            case 2:
+            case 3:
+                strengthBar.className = 'password-strength medium';
+                strengthText.className = 'password-strength-text medium';
+                strengthText.textContent = 'Password sedang';
+                break;
+            case 4:
+                strengthBar.className = 'password-strength strong';
+                strengthText.className = 'password-strength-text strong';
+                strengthText.textContent = 'Password kuat';
+                break;
+        }
+    }
+    
+    password1Input.addEventListener('input', function() {
+        checkPasswordStrength(this.value);
+    });
+    
+    // Password match checker
+    password2Input.addEventListener('input', function() {
+        if (this.value && this.value !== password1Input.value) {
+            this.style.borderColor = '#e74c3c';
+        } else if (this.value) {
+            this.style.borderColor = '#2ecc71';
+        } else {
+            this.style.borderColor = '#e1e5e9';
+        }
+    });
+    
+    // Form submission handling
+    form.addEventListener('submit', function() {
+        const submitBtn = this.querySelector('.btn-auth');
+        submitBtn.textContent = 'Mendaftar...';
+    });
+    
+    // Enhanced input interactions
+    inputs.forEach(input => {
+        if (input.value) {
+            input.classList.add('has-content');
+        }
+        
+        input.addEventListener('blur', function() {
+            if (this.value) {
+                this.classList.add('has-content');
+            } else {
+                this.classList.remove('has-content');
+            }
+        });
+        
+        input.addEventListener('mouseenter', function() {
+            if (!this.matches(':focus')) {
+                this.style.borderColor = '#68b683';
+            }
+        });
+        
+        input.addEventListener('mouseleave', function() {
+            if (!this.matches(':focus')) {
+                this.style.borderColor = '#e1e5e9';
+            }
+        });
+    });
+});
+</script>
 {% endblock %}

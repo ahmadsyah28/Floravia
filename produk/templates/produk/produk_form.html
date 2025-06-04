@@ -80,12 +80,36 @@
         margin-top: 1rem;
     }
     .preview-image {
-        width: 100px;
-        height: 100px;
+        width: 150px;
+        height: 150px;
         background-position: center;
         background-size: cover;
         border-radius: 5px;
         margin-top: 0.5rem;
+        border: 2px solid #ddd;
+    }
+    .current-image {
+        margin-top: 0.5rem;
+    }
+    .current-image img {
+        width: 150px;
+        height: 150px;
+        object-fit: cover;
+        border-radius: 5px;
+        border: 2px solid #ddd;
+    }
+    .image-options {
+        background-color: #f8f9fa;
+        padding: 1rem;
+        border-radius: 5px;
+        margin-bottom: 1rem;
+    }
+    .image-options h4 {
+        margin-top: 0;
+        color: #2c6e49;
+    }
+    .image-choice {
+        margin-bottom: 1rem;
     }
     .required {
         color: #dc3545;
@@ -119,7 +143,8 @@
         {% endif %}
     </div>
 
-    <form method="post" novalidate>
+    <!-- ✅ TAMBAHAN: enctype untuk file upload -->
+    <form method="post" enctype="multipart/form-data" novalidate>
         {% csrf_token %}
         
         <!-- Basic Information -->
@@ -204,25 +229,58 @@
             <div class="help-text">Berikan panduan perawatan yang mudah dipahami</div>
         </div>
 
-        <!-- Image URL -->
-        <div class="form-group">
-            <label for="{{ form.gambar_url.id_for_label }}">
-                {{ form.gambar_url.label }}
-            </label>
-            {{ form.gambar_url }}
-            {% if form.gambar_url.errors %}
-                <div class="invalid-feedback">
-                    {% for error in form.gambar_url.errors %}{{ error }}{% endfor %}
-                </div>
-            {% endif %}
-            <div class="help-text">Opsional. Jika kosong, gambar akan diambil dari Unsplash berdasarkan nama produk</div>
+        <!-- ✅ TAMBAHAN: Section untuk image options -->
+        <div class="image-options">
+            <h4>📸 Gambar Produk</h4>
+            <p>Pilih salah satu cara untuk menambahkan gambar:</p>
             
-            {% if form.gambar_url.value %}
-                <div class="preview-container">
-                    <strong>Preview gambar:</strong>
-                    <div class="preview-image" style="background-image: url('{{ form.gambar_url.value }}');"></div>
+            <!-- Show current image if editing -->
+            {% if produk and produk.get_image_url %}
+                <div class="current-image">
+                    <strong>Gambar saat ini:</strong><br>
+                    <img src="{{ produk.get_image_url }}" alt="{{ produk.nama }}">
                 </div>
             {% endif %}
+            
+            <!-- Upload Image -->
+            <div class="image-choice">
+                <label for="{{ form.gambar.id_for_label }}">
+                    🗂️ {{ form.gambar.label }}
+                </label>
+                {{ form.gambar }}
+                {% if form.gambar.errors %}
+                    <div class="invalid-feedback">
+                        {% for error in form.gambar.errors %}{{ error }}{% endfor %}
+                    </div>
+                {% endif %}
+                <div class="help-text">Upload gambar dari komputer Anda (Format: JPG, PNG, WebP)</div>
+            </div>
+
+            <!-- Image URL -->
+            <div class="image-choice">
+                <label for="{{ form.gambar_url.id_for_label }}">
+                    🔗 {{ form.gambar_url.label }}
+                </label>
+                {{ form.gambar_url }}
+                {% if form.gambar_url.errors %}
+                    <div class="invalid-feedback">
+                        {% for error in form.gambar_url.errors %}{{ error }}{% endfor %}
+                    </div>
+                {% endif %}
+                <div class="help-text">Atau gunakan link gambar dari internet</div>
+                
+                {% if form.gambar_url.value %}
+                    <div class="preview-container">
+                        <strong>Preview URL:</strong>
+                        <div class="preview-image" style="background-image: url('{{ form.gambar_url.value }}');"></div>
+                    </div>
+                {% endif %}
+            </div>
+            
+            <p style="font-size: 0.9rem; color: #666; margin-top: 1rem;">
+                💡 <strong>Tips:</strong> Jika keduanya diisi, gambar upload akan diprioritaskan. 
+                Jika tidak ada yang diisi, gambar default dari Unsplash akan digunakan.
+            </p>
         </div>
 
         <!-- Submit Actions -->
@@ -261,13 +319,36 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (!previewContainer) {
                     const container = document.createElement('div');
                     container.className = 'preview-container';
-                    container.innerHTML = '<strong>Preview gambar:</strong><div class="preview-image"></div>';
+                    container.innerHTML = '<strong>Preview URL:</strong><div class="preview-image"></div>';
                     this.parentNode.appendChild(container);
                 }
                 const preview = document.querySelector('.preview-image');
                 preview.style.backgroundImage = `url('${this.value}')`;
             } else if (previewContainer) {
                 previewContainer.remove();
+            }
+        });
+    }
+    
+    // Preview uploaded image
+    const imageUploadField = document.querySelector('input[name="gambar"]');
+    if (imageUploadField) {
+        imageUploadField.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    let previewContainer = document.querySelector('.upload-preview');
+                    if (!previewContainer) {
+                        previewContainer = document.createElement('div');
+                        previewContainer.className = 'preview-container upload-preview';
+                        previewContainer.innerHTML = '<strong>Preview Upload:</strong><div class="preview-image"></div>';
+                        imageUploadField.parentNode.appendChild(previewContainer);
+                    }
+                    const preview = previewContainer.querySelector('.preview-image');
+                    preview.style.backgroundImage = `url('${e.target.result}')`;
+                };
+                reader.readAsDataURL(file);
             }
         });
     }

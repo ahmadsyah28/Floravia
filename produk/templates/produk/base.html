@@ -1,186 +1,279 @@
-<!-- templates/produk/base.html -->
+<!-- produk/templates/produk/base.html -->
 <!DOCTYPE html>
 <html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Floravia - Temukan Keindahan Alam di Rumah Anda{% endblock %}</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}Floravia - Toko Tanaman Hias{% endblock %}</title>
+
+    <!-- Base Styles -->
     <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f8f9fa;
-            color: #333;
-            line-height: 1.6;
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Arial", sans-serif;
+        background-color: #f8f9fa;
+        color: #333;
+        line-height: 1.6;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 1rem;
+      }
+
+      header {
+        background-color: #2c6e49;
+        color: white;
+        padding: 1rem 0;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .logo {
+        font-size: 1.8rem;
+        font-weight: bold;
+      }
+
+      .nav-links {
+        display: flex;
+        list-style: none;
+        gap: 2rem;
+        align-items: center;
+      }
+
+      .nav-links a {
+        color: white;
+        text-decoration: none;
+        transition: color 0.3s;
+        padding: 0.5rem 1rem;
+        border-radius: 5px;
+      }
+
+      .nav-links a:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+      }
+
+      .user-info {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        font-size: 0.9rem;
+      }
+
+      .cart-icon {
+        position: relative;
+        background-color: #4c956c;
+        padding: 0.5rem;
+        border-radius: 50%;
+        text-decoration: none !important;
+      }
+
+      .cart-count {
+        position: absolute;
+        top: -8px;
+        right: -8px;
+        background-color: #dc3545;
+        color: white;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        font-size: 0.7rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .admin-badge {
+        background-color: #ffc107;
+        color: #000;
+        padding: 0.2rem 0.5rem;
+        border-radius: 3px;
+        font-size: 0.7rem;
+        font-weight: bold;
+      }
+
+      main {
+        min-height: calc(100vh - 140px);
+        padding: 2rem 0;
+      }
+
+      footer {
+        background-color: #2c6e49;
+        color: white;
+        text-align: center;
+        padding: 1rem 0;
+        margin-top: 3rem;
+      }
+
+      /* Button Styles */
+      .btn {
+        display: inline-block;
+        background-color: #4c956c;
+        color: white;
+        padding: 0.8rem 1.5rem;
+        text-decoration: none;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+        border: none;
+        cursor: pointer;
+        font-size: 1rem;
+      }
+
+      .btn:hover {
+        background-color: #2c6e49;
+      }
+
+      .btn-secondary {
+        background-color: #6c757d;
+      }
+
+      .btn-secondary:hover {
+        background-color: #5a6268;
+      }
+
+      .btn-danger {
+        background-color: #dc3545;
+      }
+
+      .btn-danger:hover {
+        background-color: #c82333;
+      }
+
+      .btn-warning {
+        background-color: #ffc107;
+        color: #000;
+      }
+
+      .btn-warning:hover {
+        background-color: #e0a800;
+      }
+
+      /* Alert Styles */
+      .alert {
+        padding: 1rem;
+        margin-bottom: 1rem;
+        border-radius: 5px;
+      }
+
+      .alert-success {
+        background-color: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+      }
+
+      .alert-danger {
+        background-color: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+      }
+
+      .alert-warning {
+        background-color: #fff3cd;
+        color: #856404;
+        border: 1px solid #ffeaa7;
+      }
+
+      .alert-info {
+        background-color: #d1ecf1;
+        color: #0c5460;
+        border: 1px solid #bee5eb;
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .nav-links {
+          flex-direction: column;
+          gap: 1rem;
         }
-        header {
-            background-color: #2c6e49;
-            color: white;
-            padding: 1rem 0;
-            text-align: center;
-        }
-        .container {
-            width: 90%;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem 0;
-        }
+
         nav {
-            background-color: #4c956c;
-            padding: 1rem 0;
+          flex-direction: column;
+          gap: 1rem;
         }
-        nav ul {
-            list-style-type: none;
-            margin: 0;
-            padding: 0;
-            text-align: center;
+
+        .user-info {
+          flex-direction: column;
+          gap: 0.5rem;
         }
-        nav ul li {
-            display: inline;
-            margin: 0 15px;
-        }
-        nav ul li a {
-            color: white;
-            text-decoration: none;
-            font-weight: bold;
-            transition: color 0.3s;
-            padding: 0.5rem 1rem;
-            border-radius: 5px;
-        }
-        nav ul li a:hover {
-            color: #d8f3dc;
-            background-color: rgba(255,255,255,0.1);
-        }
-        .btn {
-            display: inline-block;
-            background-color: #4c956c;
-            color: white;
-            padding: 0.8rem 1.5rem;
-            text-decoration: none;
-            border-radius: 5px;
-            transition: background-color 0.3s;
-            font-weight: bold;
-            border: none;
-            cursor: pointer;
-        }
-        .btn:hover {
-            background-color: #2c6e49;
-        }
-        .btn-danger {
-            background-color: #dc3545;
-        }
-        .btn-danger:hover {
-            background-color: #c82333;
-        }
-        .btn-secondary {
-            background-color: #6c757d;
-        }
-        .btn-secondary:hover {
-            background-color: #5a6268;
-        }
-        .messages {
-            margin: 1rem 0;
-        }
-        .alert {
-            padding: 0.75rem 1.25rem;
-            margin-bottom: 1rem;
-            border: 1px solid transparent;
-            border-radius: 0.25rem;
-        }
-        .alert-success {
-            color: #155724;
-            background-color: #d4edda;
-            border-color: #c3e6cb;
-        }
-        .alert-error, .alert-danger {
-            color: #721c24;
-            background-color: #f8d7da;
-            border-color: #f5c6cb;
-        }
-        .alert-warning {
-            color: #856404;
-            background-color: #fff3cd;
-            border-color: #ffeaa7;
-        }
-        .alert-info {
-            color: #0c5460;
-            background-color: #d1ecf1;
-            border-color: #bee5eb;
-        }
-        footer {
-            background-color: #2c6e49;
-            color: white;
-            text-align: center;
-            padding: 2rem 0;
-            margin-top: 3rem;
-        }
-        .form-control {
-            width: 100%;
-            padding: 0.8rem;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-family: inherit;
-            box-sizing: border-box;
-        }
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: bold;
-        }
-        .admin-controls {
-            background-color: #fff;
-            padding: 1rem;
-            border-radius: 10px;
-            margin-bottom: 2rem;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        .admin-controls h3 {
-            color: #2c6e49;
-            margin-top: 0;
-        }
-        {% block extra_css %}{% endblock %}
+      }
     </style>
-</head>
-<body>
+
+    {% block extra_css %}{% endblock %}
+  </head>
+  <body>
     <header>
-        <h1>Floravia</h1>
-        <p>Temukan Keindahan Alam di Rumah Anda</p>
-    </header>
-    
-    <nav>
-        <ul>
+      <div class="container">
+        <nav>
+          <div class="logo">🌱 Floravia</div>
+          <ul class="nav-links">
             <li><a href="{% url 'homepage' %}">Home</a></li>
-            <li><a href="{% url 'produk_list' %}">Daftar Produk</a></li>
+            <li><a href="{% url 'produk_list' %}">Katalog</a></li>
+
+            {% if user.is_authenticated %}
+            <!-- User logged in -->
+            <li>
+              <div class="user-info">
+                <span>Halo, {{ user.username }}!</span>
+                {% if user.is_staff or user.is_superuser %}
+                <span class="admin-badge">ADMIN</span>
+                {% endif %}
+              </div>
+            </li>
+
+            {% if user.is_staff or user.is_superuser %}
+            <!-- Admin menu -->
+            <li><a href="{% url 'produk_create' %}">+ Tambah Produk</a></li>
+            <li><a href="/admin/" target="_blank">Admin Panel</a></li>
+            {% else %}
+            <!-- Regular user menu -->
+            <li>
+              <a href="{% url 'cart_detail' %}" class="cart-icon">
+                🛒 {% if user.cart.get_total_items > 0 %}
+                <span class="cart-count">{{ user.cart.get_total_items }}</span>
+                {% endif %}
+              </a>
+            </li>
+            {% endif %}
+
+            <li><a href="{% url 'logout' %}">Logout</a></li>
+            {% else %}
+            <!-- User not logged in -->
+            <li><a href="{% url 'login' %}">Login</a></li>
+            <li><a href="{% url 'register' %}">Daftar</a></li>
+            {% endif %}
+
             <li><a href="{% url 'kontak' %}">Kontak</a></li>
-            <li><a href="{% url 'produk_create' %}">Tambah Produk</a></li>
-            <li><a href="/admin/">Admin</a></li>
-        </ul>
-    </nav>
+          </ul>
+        </nav>
+      </div>
+    </header>
 
-    <div class="container">
-        <!-- Display Messages -->
-        {% if messages %}
-            <div class="messages">
-                {% for message in messages %}
-                    <div class="alert alert-{{ message.tags }}">
-                        {{ message }}
-                    </div>
-                {% endfor %}
-            </div>
-        {% endif %}
-
-        {% block content %}
-        {% endblock %}
-    </div>
+    <main>
+      <div class="container">
+        <!-- Django Messages -->
+        {% if messages %} {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %} {% endif %} {% block content %} {% endblock %}
+      </div>
+    </main>
 
     <footer>
-        <p>&copy; 2025 Floravia. Semua Hak Dilindungi.</p>
+      <div class="container">
+        <p>&copy; 2025 Floravia. Semua hak cipta dilindungi undang-undang.</p>
+      </div>
     </footer>
 
     {% block extra_js %}{% endblock %}
-</body>
+  </body>
 </html>

@@ -76,10 +76,30 @@
         display: flex;
         gap: 0.5rem;
         margin-top: 1rem;
+        flex-wrap: wrap;
     }
     .btn-sm {
         padding: 0.5rem 1rem;
         font-size: 0.9rem;
+        flex: 1;
+        text-align: center;
+    }
+    .btn-cart {
+        background-color: #28a745;
+        color: white;
+        text-decoration: none;
+        padding: 0.5rem 1rem;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+        text-align: center;
+        flex: 1;
+    }
+    .btn-cart:hover {
+        background-color: #218838;
+    }
+    .btn-cart:disabled {
+        background-color: #6c757d;
+        cursor: not-allowed;
     }
     .empty-category {
         text-align: center;
@@ -101,6 +121,24 @@
         flex-wrap: wrap;
         gap: 1rem;
     }
+    .admin-badge {
+        background-color: #ffc107;
+        color: #000;
+        padding: 0.2rem 0.5rem;
+        border-radius: 3px;
+        font-size: 0.7rem;
+        font-weight: bold;
+        margin-left: 0.5rem;
+    }
+    .login-prompt {
+        background-color: #e7f3ff;
+        border: 1px solid #b3d7ff;
+        color: #004085;
+        padding: 1rem;
+        border-radius: 5px;
+        margin-bottom: 2rem;
+        text-align: center;
+    }
 </style>
 {% endblock %}
 
@@ -112,9 +150,25 @@
         <strong>Total Produk: {{ indoor_products.count|add:outdoor_products.count|add:kaktus_products.count }}</strong>
     </div>
     <div>
-        <a href="{% url 'produk_create' %}" class="btn">+ Tambah Produk Baru</a>
+        {% if user.is_staff or user.is_superuser %}
+            <a href="{% url 'produk_create' %}" class="btn">+ Tambah Produk Baru</a>
+            <span class="admin-badge">ADMIN MODE</span>
+        {% elif user.is_authenticated %}
+            <a href="{% url 'cart_detail' %}" class="btn">🛒 Lihat Keranjang</a>
+        {% else %}
+            <a href="{% url 'login' %}" class="btn">Login untuk Berbelanja</a>
+        {% endif %}
     </div>
 </div>
+
+<!-- Show login prompt for non-authenticated users -->
+{% if not user.is_authenticated %}
+<div class="login-prompt">
+    <strong>🔒 Ingin berbelanja?</strong> 
+    <a href="{% url 'login' %}">Login</a> atau 
+    <a href="{% url 'register' %}">Daftar</a> untuk menambahkan produk ke keranjang!
+</div>
+{% endif %}
 
 <!-- Tanaman Indoor -->
 <div class="category">
@@ -126,7 +180,7 @@
         <div class="product-list">
             {% for produk in indoor_products %}
             <div class="product-card">
-                <div class="product-image" style="background-image: url('{{ produk.get_default_image }}');"></div>
+                <div class="product-image" style="background-image: url('{{ produk.get_image_url }}');"></div>
                 <div class="product-info">
                     <h3>{{ produk.nama }}</h3>
                     <div class="product-price">{{ produk.get_formatted_harga }}</div>
@@ -140,10 +194,25 @@
                         {% endif %}
                     </div>
                     <p>{{ produk.deskripsi|truncatewords:15 }}</p>
+                    
                     <div class="product-actions">
                         <a href="{% url 'produk_detail' produk.pk %}" class="btn btn-sm">Detail</a>
-                        <a href="{% url 'produk_update' produk.pk %}" class="btn btn-secondary btn-sm">Edit</a>
-                        <a href="{% url 'produk_delete' produk.pk %}" class="btn btn-danger btn-sm">Hapus</a>
+                        
+                        {% if user.is_staff or user.is_superuser %}
+                            <!-- Admin buttons -->
+                            <a href="{% url 'produk_update' produk.pk %}" class="btn btn-secondary btn-sm">Edit</a>
+                            <a href="{% url 'produk_delete' produk.pk %}" class="btn btn-danger btn-sm">Hapus</a>
+                        {% elif user.is_authenticated %}
+                            <!-- Regular user button -->
+                            {% if produk.stok > 0 %}
+                                <a href="{% url 'add_to_cart' produk.pk %}" class="btn-cart">🛒 Tambah ke Keranjang</a>
+                            {% else %}
+                                <span class="btn-cart" style="background-color: #6c757d; cursor: not-allowed;">Stok Habis</span>
+                            {% endif %}
+                        {% else %}
+                            <!-- Non-authenticated user -->
+                            <a href="{% url 'login' %}" class="btn-cart">Login untuk Beli</a>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -151,7 +220,11 @@
         </div>
     {% else %}
         <div class="empty-category">
-            <p>Belum ada produk tanaman indoor. <a href="{% url 'produk_create' %}">Tambah produk pertama?</a></p>
+            <p>Belum ada produk tanaman indoor. 
+            {% if user.is_staff or user.is_superuser %}
+                <a href="{% url 'produk_create' %}">Tambah produk pertama?</a>
+            {% endif %}
+            </p>
         </div>
     {% endif %}
 </div>
@@ -166,7 +239,7 @@
         <div class="product-list">
             {% for produk in outdoor_products %}
             <div class="product-card">
-                <div class="product-image" style="background-image: url('{{ produk.get_default_image }}');"></div>
+                <div class="product-image" style="background-image: url('{{ produk.get_image_url }}');"></div>
                 <div class="product-info">
                     <h3>{{ produk.nama }}</h3>
                     <div class="product-price">{{ produk.get_formatted_harga }}</div>
@@ -180,10 +253,25 @@
                         {% endif %}
                     </div>
                     <p>{{ produk.deskripsi|truncatewords:15 }}</p>
+                    
                     <div class="product-actions">
                         <a href="{% url 'produk_detail' produk.pk %}" class="btn btn-sm">Detail</a>
-                        <a href="{% url 'produk_update' produk.pk %}" class="btn btn-secondary btn-sm">Edit</a>
-                        <a href="{% url 'produk_delete' produk.pk %}" class="btn btn-danger btn-sm">Hapus</a>
+                        
+                        {% if user.is_staff or user.is_superuser %}
+                            <!-- Admin buttons -->
+                            <a href="{% url 'produk_update' produk.pk %}" class="btn btn-secondary btn-sm">Edit</a>
+                            <a href="{% url 'produk_delete' produk.pk %}" class="btn btn-danger btn-sm">Hapus</a>
+                        {% elif user.is_authenticated %}
+                            <!-- Regular user button -->
+                            {% if produk.stok > 0 %}
+                                <a href="{% url 'add_to_cart' produk.pk %}" class="btn-cart">🛒 Tambah ke Keranjang</a>
+                            {% else %}
+                                <span class="btn-cart" style="background-color: #6c757d; cursor: not-allowed;">Stok Habis</span>
+                            {% endif %}
+                        {% else %}
+                            <!-- Non-authenticated user -->
+                            <a href="{% url 'login' %}" class="btn-cart">Login untuk Beli</a>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -191,7 +279,11 @@
         </div>
     {% else %}
         <div class="empty-category">
-            <p>Belum ada produk tanaman outdoor. <a href="{% url 'produk_create' %}">Tambah produk pertama?</a></p>
+            <p>Belum ada produk tanaman outdoor.
+            {% if user.is_staff or user.is_superuser %}
+                <a href="{% url 'produk_create' %}">Tambah produk pertama?</a>
+            {% endif %}
+            </p>
         </div>
     {% endif %}
 </div>
@@ -206,7 +298,7 @@
         <div class="product-list">
             {% for produk in kaktus_products %}
             <div class="product-card">
-                <div class="product-image" style="background-image: url('{{ produk.get_default_image }}');"></div>
+                <div class="product-image" style="background-image: url('{{ produk.get_image_url }}');"></div>
                 <div class="product-info">
                     <h3>{{ produk.nama }}</h3>
                     <div class="product-price">{{ produk.get_formatted_harga }}</div>
@@ -220,10 +312,25 @@
                         {% endif %}
                     </div>
                     <p>{{ produk.deskripsi|truncatewords:15 }}</p>
+                    
                     <div class="product-actions">
                         <a href="{% url 'produk_detail' produk.pk %}" class="btn btn-sm">Detail</a>
-                        <a href="{% url 'produk_update' produk.pk %}" class="btn btn-secondary btn-sm">Edit</a>
-                        <a href="{% url 'produk_delete' produk.pk %}" class="btn btn-danger btn-sm">Hapus</a>
+                        
+                        {% if user.is_staff or user.is_superuser %}
+                            <!-- Admin buttons -->
+                            <a href="{% url 'produk_update' produk.pk %}" class="btn btn-secondary btn-sm">Edit</a>
+                            <a href="{% url 'produk_delete' produk.pk %}" class="btn btn-danger btn-sm">Hapus</a>
+                        {% elif user.is_authenticated %}
+                            <!-- Regular user button -->
+                            {% if produk.stok > 0 %}
+                                <a href="{% url 'add_to_cart' produk.pk %}" class="btn-cart">🛒 Tambah ke Keranjang</a>
+                            {% else %}
+                                <span class="btn-cart" style="background-color: #6c757d; cursor: not-allowed;">Stok Habis</span>
+                            {% endif %}
+                        {% else %}
+                            <!-- Non-authenticated user -->
+                            <a href="{% url 'login' %}" class="btn-cart">Login untuk Beli</a>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -231,7 +338,11 @@
         </div>
     {% else %}
         <div class="empty-category">
-            <p>Belum ada produk kaktus & sukulen. <a href="{% url 'produk_create' %}">Tambah produk pertama?</a></p>
+            <p>Belum ada produk kaktus & sukulen.
+            {% if user.is_staff or user.is_superuser %}
+                <a href="{% url 'produk_create' %}">Tambah produk pertama?</a>
+            {% endif %}
+            </p>
         </div>
     {% endif %}
 </div>
@@ -239,8 +350,12 @@
 {% if not indoor_products and not outdoor_products and not kaktus_products %}
 <div class="admin-controls">
     <h3>Belum Ada Produk</h3>
-    <p>Katalog masih kosong. Mulai dengan menambahkan produk pertama Anda!</p>
-    <a href="{% url 'produk_create' %}" class="btn">Tambah Produk Pertama</a>
+    <p>Katalog masih kosong.</p>
+    {% if user.is_staff or user.is_superuser %}
+        <a href="{% url 'produk_create' %}" class="btn">Tambah Produk Pertama</a>
+    {% else %}
+        <p>Silakan hubungi admin untuk menambahkan produk.</p>
+    {% endif %}
 </div>
 {% endif %}
 {% endblock %}

@@ -1,0 +1,254 @@
+<!-- produk/templates/produk/cart_detail.html -->
+{% extends 'produk/base.html' %}
+
+{% block title %}Keranjang Belanja - Floravia{% endblock %}
+
+{% block extra_css %}
+<style>
+    .cart-container {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+    .cart-header {
+        background-color: white;
+        padding: 2rem;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        margin-bottom: 2rem;
+        text-align: center;
+    }
+    .cart-item {
+        background-color: white;
+        padding: 1.5rem;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        margin-bottom: 1rem;
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+    }
+    .item-image {
+        width: 80px;
+        height: 80px;
+        background-position: center;
+        background-size: cover;
+        border-radius: 5px;
+        flex-shrink: 0;
+    }
+    .item-info {
+        flex: 1;
+    }
+    .item-name {
+        font-weight: bold;
+        color: #2c6e49;
+        margin-bottom: 0.5rem;
+    }
+    .item-price {
+        color: #4c956c;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+    }
+    .item-stock {
+        font-size: 0.9rem;
+        color: #666;
+    }
+    .quantity-controls {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+    .quantity-form {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    .quantity-input {
+        width: 60px;
+        padding: 0.5rem;
+        border: 2px solid #ddd;
+        border-radius: 5px;
+        text-align: center;
+    }
+    .quantity-btn {
+        background-color: #4c956c;
+        color: white;
+        border: none;
+        padding: 0.5rem;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 0.9rem;
+    }
+    .quantity-btn:hover {
+        background-color: #2c6e49;
+    }
+    .remove-btn {
+        background-color: #dc3545;
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 0.9rem;
+    }
+    .remove-btn:hover {
+        background-color: #c82333;
+    }
+    .cart-summary {
+        background-color: white;
+        padding: 2rem;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        margin-top: 2rem;
+    }
+    .summary-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 1rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid #ddd;
+    }
+    .summary-row:last-child {
+        border-bottom: none;
+        font-weight: bold;
+        font-size: 1.2rem;
+        color: #2c6e49;
+    }
+    .cart-actions {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2rem;
+        justify-content: center;
+    }
+    .empty-cart {
+        text-align: center;
+        background-color: white;
+        padding: 3rem;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    .empty-cart-icon {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+    }
+    @media (max-width: 768px) {
+        .cart-item {
+            flex-direction: column;
+            text-align: center;
+        }
+        .quantity-controls {
+            justify-content: center;
+        }
+        .cart-actions {
+            flex-direction: column;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="cart-container">
+    <div class="cart-header">
+        <h1>🛒 Keranjang Belanja</h1>
+        <p>Halo, {{ user.username }}!</p>
+    </div>
+
+    {% if cart_items %}
+        <!-- Cart Items -->
+        {% for item in cart_items %}
+        <div class="cart-item">
+            <div class="item-image" style="background-image: url('{{ item.produk.get_image_url }}');"></div>
+            
+            <div class="item-info">
+                <div class="item-name">{{ item.produk.nama }}</div>
+                <div class="item-price">{{ item.produk.get_formatted_harga }} per unit</div>
+                <div class="item-stock">Stok tersedia: {{ item.produk.stok }}</div>
+            </div>
+            
+            <div class="quantity-controls">
+                <form method="post" action="{% url 'update_cart_item' item.pk %}" class="quantity-form">
+                    {% csrf_token %}
+                    <input type="number" name="quantity" value="{{ item.quantity }}" 
+                           min="1" max="{{ item.produk.stok }}" class="quantity-input" 
+                           onchange="this.form.submit()">
+                    <button type="submit" class="quantity-btn">Update</button>
+                </form>
+                
+                <a href="{% url 'remove_from_cart' item.pk %}" class="remove-btn" 
+                   onclick="return confirm('Hapus {{ item.produk.nama }} dari keranjang?')">
+                   Hapus
+                </a>
+            </div>
+            
+            <div style="text-align: right;">
+                <div><strong>{{ item.get_formatted_total_price }}</strong></div>
+                <div style="font-size: 0.9rem; color: #666;">{{ item.quantity }} x {{ item.produk.get_formatted_harga }}</div>
+            </div>
+        </div>
+        {% endfor %}
+
+        <!-- Cart Summary -->
+        <div class="cart-summary">
+            <h3>📊 Ringkasan Pesanan</h3>
+            
+            <div class="summary-row">
+                <span>Total Item:</span>
+                <span>{{ cart.get_total_items }} produk</span>
+            </div>
+            
+            <div class="summary-row">
+                <span>Total Harga:</span>
+                <span>{{ cart.get_formatted_total_price }}</span>
+            </div>
+        </div>
+
+        <!-- Cart Actions -->
+        <div class="cart-actions">
+            <a href="{% url 'produk_list' %}" class="btn btn-secondary">← Lanjut Belanja</a>
+            <a href="{% url 'clear_cart' %}" class="btn btn-warning" 
+               onclick="return confirm('Kosongkan seluruh keranjang?')">
+               🗑️ Kosongkan Keranjang
+            </a>
+            <button class="btn" onclick="alert('Fitur checkout segera hadir!')">
+                💳 Checkout (Coming Soon)
+            </button>
+        </div>
+
+    {% else %}
+        <!-- Empty Cart -->
+        <div class="empty-cart">
+            <div class="empty-cart-icon">🛒</div>
+            <h2>Keranjang Belanja Kosong</h2>
+            <p>Belum ada produk di keranjang Anda.</p>
+            <p>Ayo mulai berbelanja tanaman hias favorit!</p>
+            <div style="margin-top: 2rem;">
+                <a href="{% url 'produk_list' %}" class="btn">🌱 Mulai Belanja</a>
+            </div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Auto-submit form when quantity changes
+document.addEventListener('DOMContentLoaded', function() {
+    const quantityInputs = document.querySelectorAll('.quantity-input');
+    
+    quantityInputs.forEach(input => {
+        input.addEventListener('change', function() {
+            // Validate quantity
+            const max = parseInt(this.getAttribute('max'));
+            const min = parseInt(this.getAttribute('min'));
+            let value = parseInt(this.value);
+            
+            if (value > max) {
+                this.value = max;
+                alert(`Maksimal pembelian untuk produk ini adalah ${max} unit`);
+            } else if (value < min) {
+                this.value = min;
+            }
+        });
+    });
+});
+</script>
+{% endblock %}

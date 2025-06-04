@@ -1,0 +1,168 @@
+<!-- templates/produk/produk_delete.html -->
+{% extends 'produk/base.html' %}
+
+{% block title %}Hapus Produk - {{ produk.nama }} - Floravia{% endblock %}
+
+{% block extra_css %}
+<style>
+    .delete-container {
+        max-width: 600px;
+        margin: 2rem auto;
+        background-color: white;
+        padding: 2rem;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        text-align: center;
+    }
+    .delete-header {
+        margin-bottom: 2rem;
+    }
+    .delete-icon {
+        font-size: 4rem;
+        color: #dc3545;
+        margin-bottom: 1rem;
+    }
+    .delete-header h1 {
+        color: #dc3545;
+        margin-bottom: 0.5rem;
+    }
+    .product-preview {
+        background-color: #f8f9fa;
+        padding: 1.5rem;
+        border-radius: 10px;
+        margin: 2rem 0;
+        border-left: 4px solid #dc3545;
+    }
+    .product-preview-content {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+    .product-preview-image {
+        width: 80px;
+        height: 80px;
+        background-position: center;
+        background-size: cover;
+        border-radius: 5px;
+        flex-shrink: 0;
+    }
+    .product-preview-info {
+        text-align: left;
+        flex-grow: 1;
+    }
+    .product-preview-info h3 {
+        margin: 0 0 0.5rem 0;
+        color: #2c6e49;
+    }
+    .product-preview-info .price {
+        font-weight: bold;
+        color: #4c956c;
+        margin-bottom: 0.5rem;
+    }
+    .product-preview-info .category {
+        background-color: #4c956c;
+        color: white;
+        padding: 0.2rem 0.5rem;
+        border-radius: 10px;
+        font-size: 0.8rem;
+        display: inline-block;
+    }
+    .warning-text {
+        background-color: #fff3cd;
+        border: 1px solid #ffeaa7;
+        color: #856404;
+        padding: 1rem;
+        border-radius: 5px;
+        margin: 2rem 0;
+    }
+    .warning-text strong {
+        display: block;
+        margin-bottom: 0.5rem;
+    }
+    .action-buttons {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        margin-top: 2rem;
+    }
+    .btn-confirm-delete {
+        background-color: #dc3545;
+        color: white;
+        padding: 1rem 2rem;
+        border: none;
+        border-radius: 5px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+    .btn-confirm-delete:hover {
+        background-color: #c82333;
+    }
+    @media (max-width: 768px) {
+        .product-preview-content {
+            flex-direction: column;
+            text-align: center;
+        }
+        .product-preview-info {
+            text-align: center;
+        }
+        .action-buttons {
+            flex-direction: column;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<nav style="margin-bottom: 1rem;">
+    <a href="{% url 'produk_list' %}" style="color: #4c956c; text-decoration: none;">← Kembali ke Katalog</a>
+    | <a href="{% url 'produk_detail' produk.pk %}" style="color: #4c956c; text-decoration: none;">Lihat Detail</a>
+</nav>
+
+<div class="delete-container">
+    <div class="delete-header">
+        <div class="delete-icon">🗑️</div>
+        <h1>Konfirmasi Penghapusan</h1>
+        <p>Apakah Anda yakin ingin menghapus produk ini?</p>
+    </div>
+
+    <div class="product-preview">
+        <div class="product-preview-content">
+            <div class="product-preview-image" style="background-image: url('{{ produk.get_default_image }}');"></div>
+            <div class="product-preview-info">
+                <h3>{{ produk.nama }}</h3>
+                <div class="price">{{ produk.get_formatted_harga }}</div>
+                <span class="category">{{ produk.get_kategori_display }}</span>
+                <p style="margin: 0.5rem 0 0 0; color: #666; font-size: 0.9rem;">
+                    Stok: {{ produk.stok }} unit
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="warning-text">
+        <strong>⚠️ Peringatan:</strong>
+        Tindakan ini tidak dapat dibatalkan. Semua data produk akan dihapus secara permanen dari sistem.
+        Pastikan Anda benar-benar ingin menghapus produk "{{ produk.nama }}" ini.
+    </div>
+
+    <form method="post">
+        {% csrf_token %}
+        <div class="action-buttons">
+            <button type="submit" class="btn-confirm-delete" 
+                    onclick="return confirm('Apakah Anda benar-benar yakin ingin menghapus produk {{ produk.nama }}? Tindakan ini tidak dapat dibatalkan!')">
+                🗑️ Ya, Hapus Produk
+            </button>
+            <a href="{% url 'produk_detail' produk.pk %}" class="btn btn-secondary">
+                ❌ Tidak, Kembali
+            </a>
+        </div>
+    </form>
+
+    <div style="margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #ddd; font-size: 0.9rem; color: #666;">
+        <p><strong>Info Produk:</strong></p>
+        <p>Ditambahkan: {{ produk.created_at|date:"d F Y H:i" }}</p>
+        <p>Terakhir diupdate: {{ produk.updated_at|date:"d F Y H:i" }}</p>
+    </div>
+</div>
+{% endblock %}

@@ -1,125 +1,257 @@
-# Floravia - Website Katalog Tanaman Hias
+# 🌱 Floravia - Setup Guide untuk CRUD Produk
 
-![Floravia Banner](https://source.unsplash.com/random/1200x400/?plants)
+## Langkah 1: Persiapan File Structure
 
-## Deskripsi Proyek
-
-Floravia adalah website katalog tanaman hias sederhana yang dibuat menggunakan Django. Website ini menampilkan berbagai jenis tanaman hias indoor dan outdoor, lengkap dengan deskripsi dan informasi perawatannya. Proyek ini dikembangkan sebagai mini proyek untuk pembelajaran Django.
-
-## Fitur
-
-- **Homepage** - Menampilkan halaman utama dengan informasi tentang Floravia
-- **Katalog Produk** - Halaman daftar produk tanaman hias yang tersedia
-- **Detail Produk** - Informasi lengkap mengenai tanaman hias tertentu
-- **Halaman Kontak** - Informasi kontak dan form untuk menghubungi Floravia
-
-## Demo
-
-![Screenshot Home](https://source.unsplash.com/random/800x450/?plants,homepage)
-
-## Persyaratan Sistem
-
-- Python 3.8 atau lebih baru
-- Django 4.0 atau lebih baru
-
-## Instalasi
-
-Berikut langkah-langkah untuk menginstal dan menjalankan proyek Floravia di komputer lokal Anda:
-
-1. **Clone repositori ini**
-
-```bash
-git clone https://github.com/username/floravia.git
-cd floravia
+Pastikan struktur direktori template seperti ini:
+```
+floravia/
+├── floravia/
+│   ├── __init__.py
+│   ├── settings.py
+│   ├── urls.py
+│   └── wsgi.py
+├── produk/
+│   ├── __init__.py
+│   ├── admin.py          # ✅ Update
+│   ├── apps.py
+│   ├── models.py         # ✅ Update
+│   ├── forms.py          # ✅ Buat baru
+│   ├── views.py          # ✅ Update
+│   ├── urls.py           # ✅ Update
+│   ├── migrations/
+│   └── templates/        # ✅ Buat direktori baru
+│       └── produk/       # ✅ Buat direktori baru
+│           ├── base.html
+│           ├── homepage.html
+│           ├── produk_list.html
+│           ├── produk_detail.html
+│           ├── produk_form.html
+│           ├── produk_delete.html
+│           └── kontak.html
+└── manage.py
 ```
 
-2. **Buat virtual environment**
+## Langkah 2: Update Settings
 
-```bash
-python -m venv venv
+Pastikan di `floravia/settings.py`:
+
+```python
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'produk',  # ✅ Pastikan app produk terdaftar
+]
+
+# Database (SQLite default)
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
+
+# Template settings
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [],
+        'APP_DIRS': True,  # ✅ Pastikan True untuk template di app
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
+
+# Internationalization
+LANGUAGE_CODE = 'id'  # Bahasa Indonesia
+TIME_ZONE = 'Asia/Jakarta'
+USE_I18N = True
+USE_TZ = True
 ```
 
-3. **Aktifkan virtual environment**
+## Langkah 3: URL Configuration
 
-- Di Windows:
-```bash
-venv\Scripts\activate
+Update `floravia/urls.py`:
+
+```python
+from django.contrib import admin
+from django.urls import path, include
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('', include('produk.urls')),
+]
 ```
 
-- Di Linux/Mac:
-```bash
-source venv/bin/activate
-```
+## Langkah 4: Migration dan Setup Database
 
-4. **Instal dependensi**
+Jalankan command berikut di terminal:
 
 ```bash
-pip install django
+# 1. Buat migration untuk model baru
+python manage.py makemigrations produk
+
+# 2. Terapkan migration ke database
+python manage.py migrate
+
+# 3. Buat superuser untuk akses admin
+python manage.py createsuperuser
 ```
 
-5. **Jalankan server pengembangan**
+Ikuti instruksi untuk membuat superuser:
+- Username: admin (atau sesuai keinginan)
+- Email: admin@floravia.id (opsional)
+- Password: (pilih password yang aman)
 
+## Langkah 5: Populate Data Sample (Opsional)
+
+Buat file `produk/management/commands/populate_products.py`:
+
+```python
+from django.core.management.base import BaseCommand
+from produk.models import Produk
+
+class Command(BaseCommand):
+    help = 'Populate database with sample products'
+    
+    def handle(self, *args, **options):
+        sample_products = [
+            {
+                'nama': 'Monstera Deliciosa',
+                'kategori': 'indoor',
+                'harga': 250000,
+                'stok': 15,
+                'deskripsi': 'Tanaman hias indoor populer dengan daun besar berlubang yang cantik. Cocok untuk ruang tamu atau workspace.',
+                'perawatan': 'Letakkan di tempat dengan cahaya tidak langsung. Siram ketika tanah kering. Bersihkan daun secara berkala.',
+                'gambar_url': 'https://source.unsplash.com/random/400x300/?monstera'
+            },
+            {
+                'nama': 'Snake Plant (Sansevieria)',
+                'kategori': 'indoor',
+                'harga': 150000,
+                'stok': 25,
+                'deskripsi': 'Tanaman yang mudah perawatannya dan bisa menyerap polutan udara. Ideal untuk pemula.',
+                'perawatan': 'Tahan kekeringan. Siram setiap 2-3 minggu sekali. Hindari air berlebihan.',
+                'gambar_url': 'https://source.unsplash.com/random/400x300/?snake+plant'
+            },
+            {
+                'nama': 'Aglaonema Red Ruby',
+                'kategori': 'outdoor',
+                'harga': 200000,
+                'stok': 10,
+                'deskripsi': 'Tanaman hias dengan daun berwarna merah menarik yang cocok untuk taman.',
+                'perawatan': 'Letakkan di tempat dengan cahaya sedang. Siram saat tanah mulai kering.',
+                'gambar_url': 'https://source.unsplash.com/random/400x300/?aglaonema+red'
+            },
+            {
+                'nama': 'Kaktus Golden Barrel',
+                'kategori': 'kaktus',
+                'harga': 125000,
+                'stok': 20,
+                'deskripsi': 'Kaktus berbentuk bulat dengan duri emas yang cantik. Mudah dirawat dan tahan panas.',
+                'perawatan': 'Butuh sinar matahari langsung. Siram sangat jarang, hanya ketika tanah benar-benar kering.',
+                'gambar_url': 'https://source.unsplash.com/random/400x300/?golden+barrel+cactus'
+            },
+            {
+                'nama': 'Succulent Mix',
+                'kategori': 'kaktus',
+                'harga': 75000,
+                'stok': 30,
+                'deskripsi': 'Campuran berbagai jenis succulent dalam pot kecil. Perfect untuk meja kerja.',
+                'perawatan': 'Tempatkan di area terang. Siram sedikit setiap minggu. Hindari genangan air.',
+                'gambar_url': 'https://source.unsplash.com/random/400x300/?succulent+mix'
+            }
+        ]
+        
+        for product_data in sample_products:
+            produk, created = Produk.objects.get_or_create(
+                nama=product_data['nama'],
+                defaults=product_data
+            )
+            if created:
+                self.stdout.write(
+                    self.style.SUCCESS(f'Successfully created product: {produk.nama}')
+                )
+            else:
+                self.stdout.write(
+                    self.style.WARNING(f'Product already exists: {produk.nama}')
+                )
+        
+        self.stdout.write(
+            self.style.SUCCESS('Finished populating products!')
+        )
+```
+
+Untuk menggunakan command ini:
+```bash
+# Buat direktori management
+mkdir -p produk/management/commands
+touch produk/management/__init__.py
+touch produk/management/commands/__init__.py
+
+# Jalankan populate command
+python manage.py populate_products
+```
+
+## Langkah 6: Testing Website
+
+Jalankan development server:
 ```bash
 python manage.py runserver
 ```
 
-6. **Buka browser dan akses website**
+### Test URLs:
+- **Homepage**: http://127.0.0.1:8000/
+- **Katalog Produk**: http://127.0.0.1:8000/produk/
+- **Tambah Produk**: http://127.0.0.1:8000/produk/tambah/
+- **Admin Panel**: http://127.0.0.1:8000/admin/
+- **Kontak**: http://127.0.0.1:8000/kontak/
 
-```
-http://127.0.0.1:8000/
-```
+## Fitur yang Tersedia:
 
-## Struktur Proyek
+### ✅ CRUD Operations:
+- **Create**: Form tambah produk dengan validasi
+- **Read**: List produk dan detail produk
+- **Update**: Edit produk existing
+- **Delete**: Hapus produk dengan konfirmasi
 
-```
-floravia/
-├── floravia/           # Direktori proyek utama
-│   ├── __init__.py
-│   ├── asgi.py
-│   ├── settings.py     # Pengaturan proyek
-│   ├── urls.py         # URL utama
-│   └── wsgi.py
-├── produk/             # Aplikasi produk
-│   ├── __init__.py
-│   ├── admin.py
-│   ├── apps.py
-│   ├── migrations/
-│   ├── models.py
-│   ├── tests.py
-│   ├── urls.py         # URL aplikasi
-│   └── views.py        # Function-based views
-├── manage.py           # Script manajemen Django
-└── venv/               # Virtual environment (tidak dicommit ke git)
-```
+### ✅ Admin Panel:
+- Dashboard admin untuk manage produk
+- Filter dan search produk
+- Bulk actions untuk update stok
 
-## Routes (URLs)
+### ✅ User Interface:
+- Responsive design
+- Success/error messages
+- Preview gambar
+- Kategori produk terorganisir
 
-| URL                     | Fungsi             | Deskripsi                          |
-|-------------------------|--------------------|------------------------------------|
-| `/`                     | `homepage`         | Halaman utama website              |
-| `/produk/`              | `produk_list`      | Menampilkan daftar semua produk    |
-| `/produk/<int:produk_id>/` | `produk_detail` | Menampilkan detail produk tertentu |
-| `/kontak/`              | `kontak`           | Halaman informasi kontak           |
+### ✅ Database:
+- SQLite database
+- Model relationships
+- Auto-generated images dari Unsplash
 
-## Pengembangan Selanjutnya
+## Troubleshooting:
 
-Beberapa fitur yang bisa ditambahkan untuk pengembangan selanjutnya:
-- Menggunakan database untuk menyimpan data produk
-- Implementasi sistem template Django
-- Menambahkan sistem autentikasi pengguna
-- Fitur keranjang belanja dan checkout
-- Panel admin untuk mengelola produk
+1. **Template not found**: Pastikan struktur direktori template benar
+2. **No reverse match**: Cek nama URL di urls.py
+3. **Database error**: Jalankan `python manage.py migrate`
+4. **Static files**: Untuk production, setup static files dengan `python manage.py collectstatic`
 
-## Kontribusi
+## Pengembangan Selanjutnya:
 
-Kontribusi dan saran sangat diterima. Silakan buat issue atau pull request untuk perbaikan atau penambahan fitur.
-
-## Lisensi
-
-[MIT License](LICENSE)
-
-## Kontak
-
-Untuk pertanyaan atau informasi lebih lanjut, silakan hubungi:
-- Email: info@floravia.id
-- Website: [floravia.id](https://floravia.id)
+- Tambah authentication untuk protect CRUD operations
+- Upload gambar ke server instead of URL
+- Implementasi shopping cart
+- Review dan rating system
+- Email notifications untuk order
+- Payment gateway integration

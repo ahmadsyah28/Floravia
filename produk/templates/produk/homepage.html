@@ -1,0 +1,153 @@
+<!-- templates/produk/homepage.html -->
+{% extends 'produk/base.html' %}
+
+{% block title %}Floravia - Homepage{% endblock %}
+
+{% block extra_css %}
+<style>
+    .hero {
+        background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://source.unsplash.com/random/1200x700/?plants');
+        height: 60vh;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        color: white;
+        border-radius: 10px;
+        margin-bottom: 3rem;
+    }
+    .hero-content {
+        max-width: 800px;
+        padding: 2rem;
+    }
+    .hero h1 {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+    }
+    .hero p {
+        font-size: 1.2rem;
+        margin-bottom: 2rem;
+    }
+    .features {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        margin: 3rem 0;
+    }
+    .feature {
+        background-color: white;
+        padding: 2rem;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        text-align: center;
+    }
+    .feature h3 {
+        color: #2c6e49;
+        margin-bottom: 1rem;
+    }
+    .featured-products {
+        margin-top: 3rem;
+    }
+    .product-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 2rem;
+        margin-top: 2rem;
+    }
+    .product-card {
+        background-color: white;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s;
+    }
+    .product-card:hover {
+        transform: translateY(-5px);
+    }
+    .product-image {
+        height: 200px;
+        background-position: center;
+        background-size: cover;
+    }
+    .product-info {
+        padding: 1.5rem;
+    }
+    .product-info h3 {
+        margin-top: 0;
+        color: #2c6e49;
+    }
+    .product-price {
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: #4c956c;
+        margin: 0.5rem 0;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="hero">
+    <div class="hero-content">
+        <h1>Selamat Datang di Floravia</h1>
+        <p>Toko tanaman hias terlengkap untuk mempercantik rumah dan taman Anda</p>
+        <a href="{% url 'produk_list' %}" class="btn">Lihat Koleksi Kami</a>
+    </div>
+</div>
+
+<div class="admin-controls">
+    <h3>🌱 Panel Manajemen</h3>
+    <p>Kelola produk tanaman hias Anda dengan mudah</p>
+    <a href="{% url 'produk_create' %}" class="btn">Tambah Produk Baru</a>
+    <a href="/admin/" class="btn btn-secondary">Admin Dashboard</a>
+</div>
+
+<h2>Tentang Floravia</h2>
+<p>Floravia menyediakan berbagai pilihan tanaman hias berkualitas untuk mempercantik ruangan dan taman Anda. Kami berkomitmen untuk menyediakan tanaman terbaik dengan perawatan yang mudah dan harga yang terjangkau.</p>
+
+<div class="features">
+    <div class="feature">
+        <h3>🏠 Tanaman Indoor</h3>
+        <p>Koleksi tanaman indoor kami akan membuat ruangan Anda lebih segar, indah, dan menyehatkan.</p>
+    </div>
+    <div class="feature">
+        <h3>🌳 Tanaman Outdoor</h3>
+        <p>Percantik taman Anda dengan berbagai pilihan tanaman outdoor yang menawan.</p>
+    </div>
+    <div class="feature">
+        <h3>🌵 Kaktus & Sukulen</h3>
+        <p>Tanaman dekoratif yang mudah dirawat dan tahan lama untuk mempercantik sudut rumah Anda.</p>
+    </div>
+</div>
+
+{% if featured_products %}
+<div class="featured-products">
+    <h2>Produk Unggulan</h2>
+    <div class="product-grid">
+        {% for produk in featured_products %}
+        <div class="product-card">
+            <div class="product-image" style="background-image: url('{{ produk.get_default_image }}');"></div>
+            <div class="product-info">
+                <h3>{{ produk.nama }}</h3>
+                <div class="product-price">{{ produk.get_formatted_harga }}</div>
+                <p>{{ produk.deskripsi|truncatewords:15 }}</p>
+                <a href="{% url 'produk_detail' produk.pk %}" class="btn">Lihat Detail</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <div style="text-align: center; margin-top: 2rem;">
+        <a href="{% url 'produk_list' %}" class="btn">Lihat Semua Produk</a>
+    </div>
+</div>
+{% else %}
+<div class="admin-controls">
+    <h3>Belum Ada Produk</h3>
+    <p>Mulai dengan menambahkan produk pertama Anda!</p>
+    <a href="{% url 'produk_create' %}" class="btn">Tambah Produk Pertama</a>
+</div>
+{% endif %}
+{% endblock %}

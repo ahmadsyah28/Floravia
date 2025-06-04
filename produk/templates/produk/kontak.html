@@ -1,0 +1,295 @@
+<!-- templates/produk/kontak.html -->
+{% extends 'produk/base.html' %}
+
+{% block title %}Floravia - Kontak{% endblock %}
+
+{% block extra_css %}
+<style>
+    .contact-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 2rem;
+        margin-top: 2rem;
+    }
+    .contact-info {
+        flex: 1;
+        min-width: 300px;
+        background-color: white;
+        padding: 2rem;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    .contact-form {
+        flex: 1;
+        min-width: 300px;
+        background-color: white;
+        padding: 2rem;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    .contact-item {
+        margin-bottom: 2rem;
+        padding: 1rem;
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        border-left: 4px solid #4c956c;
+    }
+    .contact-item h3 {
+        color: #2c6e49;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    .contact-item p {
+        margin: 0;
+        line-height: 1.6;
+    }
+    .hours {
+        margin-top: 2rem;
+    }
+    .hours h3 {
+        color: #2c6e49;
+        margin-bottom: 1rem;
+    }
+    .hours-table {
+        width: 100%;
+        border-collapse: collapse;
+        background-color: white;
+        border-radius: 5px;
+        overflow: hidden;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .hours-table tr {
+        border-bottom: 1px solid #ddd;
+    }
+    .hours-table tr:last-child {
+        border-bottom: none;
+    }
+    .hours-table td {
+        padding: 0.8rem;
+    }
+    .hours-table td:last-child {
+        text-align: right;
+        font-weight: bold;
+        color: #4c956c;
+    }
+    .hours-table tr:nth-child(even) {
+        background-color: #f8f9fa;
+    }
+    .map {
+        width: 100%;
+        height: 250px;
+        background: linear-gradient(135deg, #4c956c, #2c6e49);
+        margin-top: 2rem;
+        border-radius: 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: white;
+        font-style: italic;
+        position: relative;
+        overflow: hidden;
+    }
+    .map::before {
+        content: '🗺️';
+        font-size: 3rem;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        opacity: 0.3;
+    }
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+    .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: bold;
+        color: #2c6e49;
+    }
+    .form-control {
+        width: 100%;
+        padding: 0.8rem;
+        border: 2px solid #ddd;
+        border-radius: 5px;
+        font-family: inherit;
+        transition: border-color 0.3s;
+        box-sizing: border-box;
+    }
+    .form-control:focus {
+        outline: none;
+        border-color: #4c956c;
+        box-shadow: 0 0 0 3px rgba(76, 149, 108, 0.1);
+    }
+    .form-control textarea {
+        min-height: 120px;
+        resize: vertical;
+    }
+    .contact-form h3 {
+        color: #2c6e49;
+        margin-bottom: 1.5rem;
+        text-align: center;
+    }
+    .social-links {
+        margin-top: 2rem;
+        padding: 1rem;
+        background-color: #f8f9fa;
+        border-radius: 8px;
+    }
+    .social-links h4 {
+        color: #2c6e49;
+        margin-bottom: 1rem;
+    }
+    .social-links a {
+        display: inline-block;
+        margin-right: 1rem;
+        color: #4c956c;
+        text-decoration: none;
+        font-weight: bold;
+        transition: color 0.3s;
+    }
+    .social-links a:hover {
+        color: #2c6e49;
+    }
+    @media (max-width: 768px) {
+        .contact-container {
+            flex-direction: column;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<h1>Hubungi Kami</h1>
+<p>Kami siap membantu Anda memilih tanaman yang tepat untuk rumah dan taman Anda. Jangan ragu untuk menghubungi kami!</p>
+
+<div class="contact-container">
+    <div class="contact-info">
+        <div class="contact-item">
+            <h3>📍 Alamat Toko</h3>
+            <p>
+                Jl. Tanaman Hias No. 123<br>
+                Jakarta Selatan, 12345<br>
+                Indonesia
+            </p>
+        </div>
+        
+        <div class="contact-item">
+            <h3>📞 Kontak</h3>
+            <p>
+                <strong>Telepon:</strong> (021) 1234-5678<br>
+                <strong>WhatsApp:</strong> +62 812-3456-7890<br>
+                <strong>Email:</strong> info@floravia.id
+            </p>
+        </div>
+        
+        <div class="contact-item">
+            <h3>🌐 Website & Sosial Media</h3>
+            <p>
+                <strong>Website:</strong> www.floravia.id<br>
+                <strong>Instagram:</strong> @floravia.id<br>
+                <strong>Facebook:</strong> Floravia Indonesia
+            </p>
+        </div>
+        
+        <div class="hours">
+            <h3>🕒 Jam Operasional</h3>
+            <table class="hours-table">
+                <tr>
+                    <td>Senin - Jumat</td>
+                    <td>08.00 - 17.00</td>
+                </tr>
+                <tr>
+                    <td>Sabtu</td>
+                    <td>09.00 - 15.00</td>
+                </tr>
+                <tr>
+                    <td>Minggu</td>
+                    <td>09.00 - 13.00</td>
+                </tr>
+                <tr>
+                    <td>Hari Libur Nasional</td>
+                    <td>Tutup</td>
+                </tr>
+            </table>
+        </div>
+        
+        <div class="map">
+            <div style="z-index: 1; text-align: center;">
+                <strong>Lokasi Toko Floravia</strong><br>
+                <small>Jl. Tanaman Hias No. 123, Jakarta Selatan</small>
+            </div>
+        </div>
+    </div>
+    
+    <div class="contact-form">
+        <h3>💬 Kirim Pesan</h3>
+        <p style="text-align: center; margin-bottom: 2rem; color: #666;">
+            Ada pertanyaan? Kami siap membantu Anda!
+        </p>
+        
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="nama">Nama Lengkap</label>
+                <input type="text" id="nama" name="nama" class="form-control" required
+                       placeholder="Masukkan nama lengkap Anda">
+            </div>
+            
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" class="form-control" required
+                       placeholder="nama@email.com">
+            </div>
+            
+            <div class="form-group">
+                <label for="subjek">Subjek</label>
+                <input type="text" id="subjek" name="subjek" class="form-control" required
+                       placeholder="Topik pesan Anda">
+            </div>
+            
+            <div class="form-group">
+                <label for="pesan">Pesan</label>
+                <textarea id="pesan" name="pesan" class="form-control" required
+                          placeholder="Tulis pesan Anda di sini..."></textarea>
+            </div>
+            
+            <button type="submit" class="btn" style="width: 100%;">
+                📧 Kirim Pesan
+            </button>
+        </form>
+        
+        <div class="social-links">
+            <h4>Atau hubungi kami melalui:</h4>
+            <a href="https://wa.me/6281234567890">💬 WhatsApp</a>
+            <a href="mailto:info@floravia.id">📧 Email</a>
+            <a href="#">📱 Instagram</a>
+            <a href="#">📘 Facebook</a>
+        </div>
+    </div>
+</div>
+
+<div style="background-color: white; padding: 2rem; border-radius: 10px; margin-top: 2rem; text-align: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+    <h3 style="color: #2c6e49; margin-bottom: 1rem;">🌱 Kenapa Memilih Floravia?</h3>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; text-align: center;">
+        <div>
+            <strong>✅ Kualitas Terjamin</strong><br>
+            <small>Tanaman pilihan dengan kualitas terbaik</small>
+        </div>
+        <div>
+            <strong>🚚 Pengiriman Aman</strong><br>
+            <small>Packaging khusus untuk keamanan tanaman</small>
+        </div>
+        <div>
+            <strong>💡 Konsultasi Gratis</strong><br>
+            <small>Tim ahli siap membantu pilihan Anda</small>
+        </div>
+        <div>
+            <strong>🔄 Garansi Hidup</strong><br>
+            <small>Jaminan tanaman hidup atau ganti baru</small>
+        </div>
+    </div>
+</div>
+{% endblock %}

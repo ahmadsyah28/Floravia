@@ -1,0 +1,246 @@
+<!-- templates/produk/produk_list.html -->
+{% extends 'produk/base.html' %}
+
+{% block title %}Floravia - Katalog Produk{% endblock %}
+
+{% block extra_css %}
+<style>
+    .category {
+        margin-bottom: 3rem;
+    }
+    .category h2 {
+        color: #2c6e49;
+        border-bottom: 2px solid #4c956c;
+        padding-bottom: 0.5rem;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    .category-count {
+        font-size: 0.9rem;
+        background-color: #4c956c;
+        color: white;
+        padding: 0.3rem 0.8rem;
+        border-radius: 15px;
+    }
+    .product-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 2rem;
+    }
+    .product-card {
+        background-color: white;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s;
+        position: relative;
+    }
+    .product-card:hover {
+        transform: translateY(-5px);
+    }
+    .product-image {
+        height: 200px;
+        background-position: center;
+        background-size: cover;
+    }
+    .product-info {
+        padding: 1.5rem;
+    }
+    .product-info h3 {
+        margin-top: 0;
+        color: #2c6e49;
+        margin-bottom: 0.5rem;
+    }
+    .product-price {
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: #4c956c;
+        margin: 0.5rem 0;
+    }
+    .product-stock {
+        font-size: 0.9rem;
+        color: #666;
+        margin-bottom: 1rem;
+    }
+    .stock-low {
+        color: #dc3545;
+        font-weight: bold;
+    }
+    .stock-out {
+        color: #dc3545;
+        font-weight: bold;
+    }
+    .product-actions {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: 1rem;
+    }
+    .btn-sm {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+    }
+    .empty-category {
+        text-align: center;
+        padding: 2rem;
+        color: #666;
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    .filter-bar {
+        background-color: white;
+        padding: 1rem;
+        border-radius: 10px;
+        margin-bottom: 2rem;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<h1>Katalog Produk Tanaman Hias</h1>
+
+<div class="filter-bar">
+    <div>
+        <strong>Total Produk: {{ indoor_products.count|add:outdoor_products.count|add:kaktus_products.count }}</strong>
+    </div>
+    <div>
+        <a href="{% url 'produk_create' %}" class="btn">+ Tambah Produk Baru</a>
+    </div>
+</div>
+
+<!-- Tanaman Indoor -->
+<div class="category">
+    <h2>
+        🏠 Tanaman Indoor
+        <span class="category-count">{{ indoor_products.count }} produk</span>
+    </h2>
+    {% if indoor_products %}
+        <div class="product-list">
+            {% for produk in indoor_products %}
+            <div class="product-card">
+                <div class="product-image" style="background-image: url('{{ produk.get_default_image }}');"></div>
+                <div class="product-info">
+                    <h3>{{ produk.nama }}</h3>
+                    <div class="product-price">{{ produk.get_formatted_harga }}</div>
+                    <div class="product-stock">
+                        {% if produk.stok == 0 %}
+                            <span class="stock-out">Stok habis</span>
+                        {% elif produk.stok <= 5 %}
+                            <span class="stock-low">Stok tersisa: {{ produk.stok }}</span>
+                        {% else %}
+                            Stok: {{ produk.stok }}
+                        {% endif %}
+                    </div>
+                    <p>{{ produk.deskripsi|truncatewords:15 }}</p>
+                    <div class="product-actions">
+                        <a href="{% url 'produk_detail' produk.pk %}" class="btn btn-sm">Detail</a>
+                        <a href="{% url 'produk_update' produk.pk %}" class="btn btn-secondary btn-sm">Edit</a>
+                        <a href="{% url 'produk_delete' produk.pk %}" class="btn btn-danger btn-sm">Hapus</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty-category">
+            <p>Belum ada produk tanaman indoor. <a href="{% url 'produk_create' %}">Tambah produk pertama?</a></p>
+        </div>
+    {% endif %}
+</div>
+
+<!-- Tanaman Outdoor -->
+<div class="category">
+    <h2>
+        🌳 Tanaman Outdoor
+        <span class="category-count">{{ outdoor_products.count }} produk</span>
+    </h2>
+    {% if outdoor_products %}
+        <div class="product-list">
+            {% for produk in outdoor_products %}
+            <div class="product-card">
+                <div class="product-image" style="background-image: url('{{ produk.get_default_image }}');"></div>
+                <div class="product-info">
+                    <h3>{{ produk.nama }}</h3>
+                    <div class="product-price">{{ produk.get_formatted_harga }}</div>
+                    <div class="product-stock">
+                        {% if produk.stok == 0 %}
+                            <span class="stock-out">Stok habis</span>
+                        {% elif produk.stok <= 5 %}
+                            <span class="stock-low">Stok tersisa: {{ produk.stok }}</span>
+                        {% else %}
+                            Stok: {{ produk.stok }}
+                        {% endif %}
+                    </div>
+                    <p>{{ produk.deskripsi|truncatewords:15 }}</p>
+                    <div class="product-actions">
+                        <a href="{% url 'produk_detail' produk.pk %}" class="btn btn-sm">Detail</a>
+                        <a href="{% url 'produk_update' produk.pk %}" class="btn btn-secondary btn-sm">Edit</a>
+                        <a href="{% url 'produk_delete' produk.pk %}" class="btn btn-danger btn-sm">Hapus</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty-category">
+            <p>Belum ada produk tanaman outdoor. <a href="{% url 'produk_create' %}">Tambah produk pertama?</a></p>
+        </div>
+    {% endif %}
+</div>
+
+<!-- Kaktus & Sukulen -->
+<div class="category">
+    <h2>
+        🌵 Kaktus & Sukulen
+        <span class="category-count">{{ kaktus_products.count }} produk</span>
+    </h2>
+    {% if kaktus_products %}
+        <div class="product-list">
+            {% for produk in kaktus_products %}
+            <div class="product-card">
+                <div class="product-image" style="background-image: url('{{ produk.get_default_image }}');"></div>
+                <div class="product-info">
+                    <h3>{{ produk.nama }}</h3>
+                    <div class="product-price">{{ produk.get_formatted_harga }}</div>
+                    <div class="product-stock">
+                        {% if produk.stok == 0 %}
+                            <span class="stock-out">Stok habis</span>
+                        {% elif produk.stok <= 5 %}
+                            <span class="stock-low">Stok tersisa: {{ produk.stok }}</span>
+                        {% else %}
+                            Stok: {{ produk.stok }}
+                        {% endif %}
+                    </div>
+                    <p>{{ produk.deskripsi|truncatewords:15 }}</p>
+                    <div class="product-actions">
+                        <a href="{% url 'produk_detail' produk.pk %}" class="btn btn-sm">Detail</a>
+                        <a href="{% url 'produk_update' produk.pk %}" class="btn btn-secondary btn-sm">Edit</a>
+                        <a href="{% url 'produk_delete' produk.pk %}" class="btn btn-danger btn-sm">Hapus</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty-category">
+            <p>Belum ada produk kaktus & sukulen. <a href="{% url 'produk_create' %}">Tambah produk pertama?</a></p>
+        </div>
+    {% endif %}
+</div>
+
+{% if not indoor_products and not outdoor_products and not kaktus_products %}
+<div class="admin-controls">
+    <h3>Belum Ada Produk</h3>
+    <p>Katalog masih kosong. Mulai dengan menambahkan produk pertama Anda!</p>
+    <a href="{% url 'produk_create' %}" class="btn">Tambah Produk Pertama</a>
+</div>
+{% endif %}
+{% endblock %}

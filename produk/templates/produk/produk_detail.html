@@ -1,0 +1,202 @@
+<!-- templates/produk/produk_detail.html -->
+{% extends 'produk/base.html' %}
+
+{% block title %}Floravia - {{ produk.nama }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .product-detail {
+        display: flex;
+        flex-wrap: wrap;
+        background-color: white;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        margin-bottom: 2rem;
+    }
+    .product-image {
+        flex: 1;
+        min-width: 300px;
+        min-height: 400px;
+        background-position: center;
+        background-size: cover;
+    }
+    .product-info {
+        flex: 1;
+        min-width: 300px;
+        padding: 2rem;
+    }
+    .product-title {
+        color: #2c6e49;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+    .category-badge {
+        background-color: #4c956c;
+        color: white;
+        padding: 0.3rem 0.8rem;
+        border-radius: 15px;
+        font-size: 0.8rem;
+    }
+    .price {
+        font-size: 2rem;
+        color: #2c6e49;
+        font-weight: bold;
+        margin: 1rem 0;
+    }
+    .stock-info {
+        font-size: 1.1rem;
+        margin-bottom: 1.5rem;
+    }
+    .stock-available {
+        color: #28a745;
+        font-weight: bold;
+    }
+    .stock-low {
+        color: #ffc107;
+        font-weight: bold;
+    }
+    .stock-out {
+        color: #dc3545;
+        font-weight: bold;
+    }
+    .section {
+        margin: 2rem 0;
+    }
+    .section h3 {
+        color: #2c6e49;
+        margin-bottom: 1rem;
+        border-left: 4px solid #4c956c;
+        padding-left: 1rem;
+    }
+    .section p {
+        line-height: 1.8;
+    }
+    .product-actions {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2rem;
+        flex-wrap: wrap;
+    }
+    .product-meta {
+        background-color: #f8f9fa;
+        padding: 1rem;
+        border-radius: 5px;
+        margin: 1.5rem 0;
+        font-size: 0.9rem;
+        color: #666;
+    }
+    .related-products {
+        margin-top: 3rem;
+    }
+    .related-products h2 {
+        color: #2c6e49;
+        margin-bottom: 1.5rem;
+    }
+    .related-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 2rem;
+    }
+    .related-card {
+        background-color: white;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s;
+    }
+    .related-card:hover {
+        transform: translateY(-3px);
+    }
+    .related-image {
+        height: 150px;
+        background-position: center;
+        background-size: cover;
+    }
+    .related-info {
+        padding: 1rem;
+    }
+    .related-info h4 {
+        margin: 0 0 0.5rem 0;
+        color: #2c6e49;
+        font-size: 1rem;
+    }
+    .related-price {
+        color: #4c956c;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<nav style="margin-bottom: 1rem;">
+    <a href="{% url 'produk_list' %}" style="color: #4c956c; text-decoration: none;">← Kembali ke Katalog</a>
+</nav>
+
+<div class="product-detail">
+    <div class="product-image" style="background-image: url('{{ produk.get_default_image }}');"></div>
+    <div class="product-info">
+        <div class="product-title">
+            <h1>{{ produk.nama }}</h1>
+            <span class="category-badge">{{ produk.get_kategori_display }}</span>
+        </div>
+        
+        <div class="price">{{ produk.get_formatted_harga }}</div>
+        
+        <div class="stock-info">
+            {% if produk.stok == 0 %}
+                <span class="stock-out">❌ Stok habis</span>
+            {% elif produk.stok <= 5 %}
+                <span class="stock-low">⚠️ Stok tersisa: {{ produk.stok }}</span>
+            {% else %}
+                <span class="stock-available">✅ Tersedia ({{ produk.stok }} unit)</span>
+            {% endif %}
+        </div>
+        
+        <div class="section">
+            <h3>📝 Deskripsi</h3>
+            <p>{{ produk.deskripsi }}</p>
+        </div>
+        
+        <div class="section">
+            <h3>🌱 Cara Perawatan</h3>
+            <p>{{ produk.perawatan }}</p>
+        </div>
+        
+        <div class="product-meta">
+            <strong>Informasi Produk:</strong><br>
+            Ditambahkan: {{ produk.created_at|date:"d F Y" }}<br>
+            Terakhir diupdate: {{ produk.updated_at|date:"d F Y H:i" }}
+        </div>
+        
+        <div class="product-actions">
+            <a href="{% url 'produk_list' %}" class="btn btn-secondary">Kembali ke Katalog</a>
+            <a href="{% url 'produk_update' produk.pk %}" class="btn">Edit Produk</a>
+            <a href="{% url 'produk_delete' produk.pk %}" class="btn btn-danger" 
+               onclick="return confirm('Apakah Anda yakin ingin menghapus produk ini?')">Hapus Produk</a>
+        </div>
+    </div>
+</div>
+
+{% if related_products %}
+<div class="related-products">
+    <h2>Produk Serupa</h2>
+    <div class="related-grid">
+        {% for related in related_products %}
+        <div class="related-card">
+            <div class="related-image" style="background-image: url('{{ related.get_default_image }}');"></div>
+            <div class="related-info">
+                <h4>{{ related.nama }}</h4>
+                <div class="related-price">{{ related.get_formatted_harga }}</div>
+                <p>{{ related.deskripsi|truncatewords:10 }}</p>
+                <a href="{% url 'produk_detail' related.pk %}" class="btn btn-sm">Lihat Detail</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+{% endblock %}

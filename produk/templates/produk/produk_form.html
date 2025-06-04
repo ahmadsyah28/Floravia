@@ -1,0 +1,285 @@
+<!-- templates/produk/produk_form.html -->
+{% extends 'produk/base.html' %}
+
+{% block title %}{{ title }} - Floravia{% endblock %}
+
+{% block extra_css %}
+<style>
+    .form-container {
+        max-width: 800px;
+        margin: 0 auto;
+        background-color: white;
+        padding: 2rem;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    .form-header {
+        text-align: center;
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid #4c956c;
+    }
+    .form-header h1 {
+        color: #2c6e49;
+        margin-bottom: 0.5rem;
+    }
+    .form-row {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+    .form-row .form-group {
+        flex: 1;
+        margin-bottom: 0;
+    }
+    .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: bold;
+        color: #2c6e49;
+    }
+    .form-control {
+        width: 100%;
+        padding: 0.8rem;
+        border: 2px solid #ddd;
+        border-radius: 5px;
+        font-family: inherit;
+        transition: border-color 0.3s;
+        box-sizing: border-box;
+    }
+    .form-control:focus {
+        outline: none;
+        border-color: #4c956c;
+        box-shadow: 0 0 0 3px rgba(76, 149, 108, 0.1);
+    }
+    .form-control.is-invalid {
+        border-color: #dc3545;
+    }
+    .invalid-feedback {
+        color: #dc3545;
+        font-size: 0.9rem;
+        margin-top: 0.5rem;
+    }
+    .help-text {
+        font-size: 0.9rem;
+        color: #666;
+        margin-top: 0.5rem;
+    }
+    .form-actions {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        margin-top: 2rem;
+        padding-top: 2rem;
+        border-top: 1px solid #ddd;
+    }
+    .preview-container {
+        background-color: #f8f9fa;
+        padding: 1rem;
+        border-radius: 5px;
+        margin-top: 1rem;
+    }
+    .preview-image {
+        width: 100px;
+        height: 100px;
+        background-position: center;
+        background-size: cover;
+        border-radius: 5px;
+        margin-top: 0.5rem;
+    }
+    .required {
+        color: #dc3545;
+    }
+    @media (max-width: 768px) {
+        .form-row {
+            flex-direction: column;
+        }
+        .form-actions {
+            flex-direction: column;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<nav style="margin-bottom: 1rem;">
+    <a href="{% url 'produk_list' %}" style="color: #4c956c; text-decoration: none;">← Kembali ke Katalog</a>
+    {% if produk %}
+        | <a href="{% url 'produk_detail' produk.pk %}" style="color: #4c956c; text-decoration: none;">Lihat Detail</a>
+    {% endif %}
+</nav>
+
+<div class="form-container">
+    <div class="form-header">
+        <h1>{{ title }}</h1>
+        {% if produk %}
+            <p>Mengupdate produk: <strong>{{ produk.nama }}</strong></p>
+        {% else %}
+            <p>Tambahkan produk baru ke katalog Floravia</p>
+        {% endif %}
+    </div>
+
+    <form method="post" novalidate>
+        {% csrf_token %}
+        
+        <!-- Basic Information -->
+        <div class="form-row">
+            <div class="form-group">
+                <label for="{{ form.nama.id_for_label }}">
+                    {{ form.nama.label }} <span class="required">*</span>
+                </label>
+                {{ form.nama }}
+                {% if form.nama.errors %}
+                    <div class="invalid-feedback">
+                        {% for error in form.nama.errors %}{{ error }}{% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+            <div class="form-group">
+                <label for="{{ form.kategori.id_for_label }}">
+                    {{ form.kategori.label }} <span class="required">*</span>
+                </label>
+                {{ form.kategori }}
+                {% if form.kategori.errors %}
+                    <div class="invalid-feedback">
+                        {% for error in form.kategori.errors %}{{ error }}{% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Price and Stock -->
+        <div class="form-row">
+            <div class="form-group">
+                <label for="{{ form.harga.id_for_label }}">
+                    {{ form.harga.label }} (Rp) <span class="required">*</span>
+                </label>
+                {{ form.harga }}
+                {% if form.harga.errors %}
+                    <div class="invalid-feedback">
+                        {% for error in form.harga.errors %}{{ error }}{% endfor %}
+                    </div>
+                {% endif %}
+                <div class="help-text">Masukkan harga dalam Rupiah (contoh: 250000)</div>
+            </div>
+            <div class="form-group">
+                <label for="{{ form.stok.id_for_label }}">
+                    {{ form.stok.label }} <span class="required">*</span>
+                </label>
+                {{ form.stok }}
+                {% if form.stok.errors %}
+                    <div class="invalid-feedback">
+                        {% for error in form.stok.errors %}{{ error }}{% endfor %}
+                    </div>
+                {% endif %}
+                <div class="help-text">Jumlah unit yang tersedia</div>
+            </div>
+        </div>
+
+        <!-- Description -->
+        <div class="form-group">
+            <label for="{{ form.deskripsi.id_for_label }}">
+                {{ form.deskripsi.label }} <span class="required">*</span>
+            </label>
+            {{ form.deskripsi }}
+            {% if form.deskripsi.errors %}
+                <div class="invalid-feedback">
+                    {% for error in form.deskripsi.errors %}{{ error }}{% endfor %}
+                </div>
+            {% endif %}
+            <div class="help-text">Jelaskan karakteristik dan keunggulan produk</div>
+        </div>
+
+        <!-- Care Instructions -->
+        <div class="form-group">
+            <label for="{{ form.perawatan.id_for_label }}">
+                {{ form.perawatan.label }} <span class="required">*</span>
+            </label>
+            {{ form.perawatan }}
+            {% if form.perawatan.errors %}
+                <div class="invalid-feedback">
+                    {% for error in form.perawatan.errors %}{{ error }}{% endfor %}
+                </div>
+            {% endif %}
+            <div class="help-text">Berikan panduan perawatan yang mudah dipahami</div>
+        </div>
+
+        <!-- Image URL -->
+        <div class="form-group">
+            <label for="{{ form.gambar_url.id_for_label }}">
+                {{ form.gambar_url.label }}
+            </label>
+            {{ form.gambar_url }}
+            {% if form.gambar_url.errors %}
+                <div class="invalid-feedback">
+                    {% for error in form.gambar_url.errors %}{{ error }}{% endfor %}
+                </div>
+            {% endif %}
+            <div class="help-text">Opsional. Jika kosong, gambar akan diambil dari Unsplash berdasarkan nama produk</div>
+            
+            {% if form.gambar_url.value %}
+                <div class="preview-container">
+                    <strong>Preview gambar:</strong>
+                    <div class="preview-image" style="background-image: url('{{ form.gambar_url.value }}');"></div>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Submit Actions -->
+        <div class="form-actions">
+            <button type="submit" class="btn">
+                {% if produk %}💾 Simpan Perubahan{% else %}➕ Tambah Produk{% endif %}
+            </button>
+            <a href="{% url 'produk_list' %}" class="btn btn-secondary">❌ Batal</a>
+            {% if produk %}
+                <a href="{% url 'produk_detail' produk.pk %}" class="btn btn-secondary">👁️ Lihat Detail</a>
+            {% endif %}
+        </div>
+    </form>
+</div>
+
+{% if form.non_field_errors %}
+    <div class="alert alert-danger" style="margin-top: 1rem;">
+        {% for error in form.non_field_errors %}{{ error }}{% endfor %}
+    </div>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Add real-time preview for image URL
+document.addEventListener('DOMContentLoaded', function() {
+    const imageUrlField = document.querySelector('input[name="gambar_url"]');
+    const namaField = document.querySelector('input[name="nama"]');
+    
+    if (imageUrlField) {
+        imageUrlField.addEventListener('input', function() {
+            const previewContainer = document.querySelector('.preview-container');
+            const previewImage = document.querySelector('.preview-image');
+            
+            if (this.value) {
+                if (!previewContainer) {
+                    const container = document.createElement('div');
+                    container.className = 'preview-container';
+                    container.innerHTML = '<strong>Preview gambar:</strong><div class="preview-image"></div>';
+                    this.parentNode.appendChild(container);
+                }
+                const preview = document.querySelector('.preview-image');
+                preview.style.backgroundImage = `url('${this.value}')`;
+            } else if (previewContainer) {
+                previewContainer.remove();
+            }
+        });
+    }
+    
+    // Format price input
+    const hargaField = document.querySelector('input[name="harga"]');
+    if (hargaField) {
+        hargaField.addEventListener('input', function() {
+            // Remove non-numeric characters except decimal point
+            this.value = this.value.replace(/[^0-9.]/g, '');
+        });
+    }
+});
+</script>
+{% endblock %}

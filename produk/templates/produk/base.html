@@ -289,9 +289,37 @@
       /* Responsive */
       @media (max-width: 768px) {
         .nav-links {
-          display: flex;
+          display: none;
+          position: absolute;
+          top: 100%;
+          left: 0;
+          right: 0;
+          background: rgba(255, 255, 255, 0.95);
+          backdrop-filter: blur(10px);
+          padding: 1rem;
           flex-direction: column;
           gap: 1rem;
+          box-shadow: var(--shadow);
+        }
+
+        .nav-links.active {
+          display: flex;
+        }
+
+        .menu-toggle {
+          display: block;
+          background: none;
+          border: none;
+          font-size: 1.5rem;
+          color: var(--primary);
+          cursor: pointer;
+          padding: 0.5rem;
+          transition: var(--transition);
+        }
+
+        .menu-toggle:hover {
+          color: var(--primary-dark);
+          transform: scale(1.1);
         }
 
         .container {
@@ -300,6 +328,16 @@
 
         .content-wrapper {
           padding: 1.5rem;
+        }
+      }
+
+      @media (min-width: 769px) {
+        .menu-toggle {
+          display: none;
+        }
+
+        .nav-links {
+          display: flex !important;
         }
       }
 
@@ -351,7 +389,8 @@
           <a href="{% url 'homepage' %}" class="logo">
             <span>🌱</span> Floravia
           </a>
-          <ul class="nav-links">
+          <button class="menu-toggle" aria-label="Toggle navigation menu">☰</button>
+          <ul class="nav-links" id="navLinks">
             <li><a href="{% url 'homepage' %}">Home</a></li>
             <li><a href="{% url 'produk_list' %}">Katalog</a></li>
 
@@ -414,5 +453,30 @@
         <p>&copy; 2025 Floravia. Semua hak cipta dilindungi undang-undang.</p>
       </div>
     </footer>
+
+    <script>
+      const menuToggle = document.querySelector('.menu-toggle');
+      const navLinks = document.getElementById('navLinks');
+
+      menuToggle.addEventListener('click', function() {
+        navLinks.classList.toggle('active');
+      });
+
+      // Close menu when clicking outside
+      document.addEventListener('click', function(event) {
+        if (!event.target.closest('.nav-links') && !event.target.closest('.menu-toggle')) {
+          navLinks.classList.remove('active');
+        }
+      });
+
+      // Close menu when clicking a link
+      navLinks.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', () => {
+          navLinks.classList.remove('active');
+        });
+      });
+    </script>
+
+    {% block extra_js %}{% endblock %}
   </body>
 </html>

@@ -5,32 +5,32 @@
 
 {% block extra_css %}
 <style>
-    :root {
-        --primary-color: #2ecc71;
-        --secondary-color: #27ae60;
-        --text-color: #2c3e50;
-        --background-color: #f4f6f7;
-    }
-
-    body {
-        background-color: var(--background-color);
-        font-family: 'Inter', 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-    }
-
     .product-detail {
         display: flex;
         flex-wrap: wrap;
-        background-color: white;
-        border-radius: 15px;
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: var(--radius);
         overflow: hidden;
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        box-shadow: var(--shadow);
         margin-bottom: 2rem;
-        transition: all 0.3s ease;
+        transition: var(--transition);
+        position: relative;
     }
 
-    .product-detail:hover {
-        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
-        transform: translateY(-5px);
+    .product-detail::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+        opacity: 0;
+        transition: var(--transition);
+    }
+
+    .product-detail:hover::before {
+        opacity: 1;
     }
 
     .product-image {
@@ -59,290 +59,311 @@
         position: relative;
     }
 
+    .product-category {
+        display: inline-block;
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        box-shadow: var(--shadow);
+    }
+
     .product-title {
-        color: var(--text-color);
+        color: var(--text);
         margin-bottom: 1.5rem;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
     }
 
     .product-title h1 {
         margin: 0;
         font-weight: 700;
         font-size: 2.2rem;
+        color: var(--primary-dark);
     }
 
-    .category-badge {
-        background-color: var(--primary-color);
-        color: white;
-        padding: 0.4rem 1rem;
-        border-radius: 20px;
-        font-size: 0.9rem;
-        font-weight: 600;
-    }
-
-    .price {
-        font-size: 2.5rem;
-        color: var(--primary-color);
-        font-weight: 700;
+    .product-price {
+        font-size: 2rem;
+        font-weight: bold;
+        color: var(--primary);
         margin: 1.5rem 0;
         display: flex;
         align-items: center;
-        gap: 1rem;
+        gap: 0.5rem;
     }
 
-    .stock-info {
+    .product-price::before {
+        content: 'Rp';
+        font-size: 1.2rem;
+        color: var(--text-light);
+    }
+
+    .product-stock {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin: 1rem 0;
         font-size: 1.1rem;
-        margin-bottom: 1.5rem;
     }
 
-    .stock-available {
-        color: #28a745;
-        font-weight: bold;
-    }
-
-    .stock-low {
-        color: #ffc107;
-        font-weight: bold;
-    }
-
-    .stock-out {
-        color: #dc3545;
-        font-weight: bold;
-    }
-
-    .section {
-        margin: 2rem 0;
-    }
-
-    .section h3 {
-        color: var(--text-color);
-        margin-bottom: 1.2rem;
-        border-left: 5px solid var(--primary-color);
-        padding-left: 1rem;
+    .stock-status {
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
         font-weight: 600;
     }
 
-    .section p {
+    .in-stock {
+        background: rgba(46, 204, 113, 0.1);
+        color: #2ecc71;
+    }
+
+    .low-stock {
+        background: rgba(241, 196, 15, 0.1);
+        color: #f1c40f;
+    }
+
+    .out-of-stock {
+        background: rgba(231, 76, 60, 0.1);
+        color: #e74c3c;
+    }
+
+    .product-description {
+        color: var(--text-light);
         line-height: 1.8;
-        color: #555;
+        margin: 1.5rem 0;
+        font-size: 1.1rem;
     }
 
     .product-actions {
         display: flex;
         gap: 1rem;
-        margin-top: 2.5rem;
-        flex-wrap: wrap;
+        margin-top: 2rem;
     }
 
-    .btn-primary {
-        background-color: var(--primary-color);
-        color: white;
-        padding: 1rem 1.5rem;
-        border: none;
-        border-radius: 8px;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        transition: all 0.3s ease;
-        display: inline-flex;
+    .product-actions .btn {
+        flex: 1;
+    }
+
+    .quantity-control {
+        display: flex;
         align-items: center;
-        gap: 0.5rem;
-    }
-
-    .btn-primary:hover {
-        background-color: var(--secondary-color);
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(46, 204, 113, 0.3);
-    }
-
-    .btn-secondary {
-        background-color: #f1f3f4;
-        color: var(--text-color);
-        padding: 1rem 1.5rem;
-        border: none;
-        border-radius: 8px;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        transition: all 0.3s ease;
-    }
-
-    .btn-secondary:hover {
-        background-color: #e7e9ea;
-        transform: translateY(-2px);
-    }
-
-    .product-meta {
-        background-color: #f8f9fa;
-        padding: 1.2rem;
-        border-radius: 8px;
+        gap: 1rem;
         margin: 1.5rem 0;
-        font-size: 0.95rem;
-        color: #666;
     }
 
-    .related-products {
-        margin-top: 3rem;
-    }
-
-    .related-products h2 {
-        color: var(--text-color);
-        margin-bottom: 2rem;
-        text-align: center;
-    }
-
-    .related-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-        gap: 2rem;
-    }
-
-    .related-card {
-        background-color: white;
-        border-radius: 15px;
-        overflow: hidden;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        transition: all 0.3s ease;
-        position: relative;
-    }
-
-    .related-card:hover {
-        transform: translateY(-10px);
-        box-shadow: 0 15px 25px rgba(0, 0, 0, 0.15);
-    }
-
-    .related-image {
-        height: 250px;
-        background-position: center;
-        background-size: cover;
-        position: relative;
-    }
-
-    .related-info {
-        padding: 1.5rem;
-    }
-
-    .related-info h4 {
-        margin: 0 0 0.8rem 0;
-        color: var(--text-color);
-        font-size: 1.2rem;
-        font-weight: 600;
-    }
-
-    .related-price {
-        color: var(--primary-color);
-        font-weight: bold;
-        font-size: 1.3rem;
-        margin-bottom: 1rem;
-    }
-
-    .related-btn {
-        background-color: var(--primary-color);
-        color: white;
-        padding: 0.8rem 1.2rem;
+    .quantity-btn {
+        background: rgba(76, 149, 108, 0.1);
+        color: var(--primary);
         border: none;
-        border-radius: 8px;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        transition: all 0.3s ease;
-        display: inline-block;
-        width: 100%;
-        text-align: center;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        font-size: 1.2rem;
+        cursor: pointer;
+        transition: var(--transition);
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
-    .related-btn:hover {
-        background-color: var(--secondary-color);
+    .quantity-btn:hover {
+        background: rgba(76, 149, 108, 0.2);
+        transform: scale(1.1);
+    }
+
+    .quantity-input {
+        width: 60px;
+        text-align: center;
+        font-size: 1.2rem;
+        border: 2px solid var(--primary);
+        border-radius: var(--radius);
+        padding: 0.5rem;
+        color: var(--primary);
+        background: transparent;
+    }
+
+    .quantity-input:focus {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(76, 149, 108, 0.2);
+    }
+
+    .product-features {
+        margin-top: 2rem;
+        padding-top: 2rem;
+        border-top: 1px solid rgba(0,0,0,0.1);
+    }
+
+    .feature-list {
+        list-style: none;
+        padding: 0;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+        margin-top: 1rem;
+    }
+
+    .feature-item {
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+        color: var(--text-light);
+        font-size: 1rem;
+    }
+
+    .feature-icon {
+        width: 40px;
+        height: 40px;
+        background: rgba(76, 149, 108, 0.1);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--primary);
+        font-size: 1.2rem;
     }
 
     @media (max-width: 768px) {
-        .product-detail {
+        .product-info {
+            padding: 1.5rem;
+        }
+
+        .product-title h1 {
+            font-size: 1.8rem;
+        }
+
+        .product-price {
+            font-size: 1.6rem;
+        }
+
+        .product-actions {
             flex-direction: column;
         }
-        .product-image, .product-info {
-            min-width: 100%;
+
+        .feature-list {
+            grid-template-columns: 1fr;
         }
     }
 </style>
 {% endblock %}
 
 {% block content %}
-<nav style="margin-bottom: 1.5rem;">
-    <a href="{% url 'produk_list' %}" style="color: var(--primary-color); text-decoration: none; display: flex; align-items: center; gap: 0.5rem;">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="19" y1="12" x2="5" y2="12"></line>
-            <polyline points="12 19 5 12 12 5"></polyline>
-        </svg>
-        Kembali ke Katalog
-    </a>
-</nav>
-
 <div class="product-detail">
-    <div class="product-image" style="background-image: url('{{ produk.get_default_image }}');"></div>
+    <div class="product-image" style="background-image: url('{{ produk.get_image_url }}')"></div>
     <div class="product-info">
+        <span class="product-category">
+            {% if produk.kategori == 'indoor' %}
+                🏠 Tanaman Indoor
+            {% elif produk.kategori == 'outdoor' %}
+                🌳 Tanaman Outdoor
+            {% else %}
+                🌵 Kaktus & Sukulen
+            {% endif %}
+        </span>
+
         <div class="product-title">
             <h1>{{ produk.nama }}</h1>
-            <span class="category-badge">{{ produk.get_kategori_display }}</span>
         </div>
-        
-        <div class="price">
-            {{ produk.get_formatted_harga }}
-        </div>
-        
-        <div class="stock-info">
-            {% if produk.stok == 0 %}
-                <span class="stock-out">❌ Stok habis</span>
-            {% elif produk.stok <= 5 %}
-                <span class="stock-low">⚠️ Stok tersisa: {{ produk.stok }}</span>
+
+        <div class="product-price">{{ produk.harga }}</div>
+
+        <div class="product-stock">
+            📦 Status Stok:
+            {% if produk.stok > 10 %}
+                <span class="stock-status in-stock">{{ produk.stok }} Unit Tersedia</span>
+            {% elif produk.stok > 0 %}
+                <span class="stock-status low-stock">Sisa {{ produk.stok }} Unit</span>
             {% else %}
-                <span class="stock-available">✅ Tersedia ({{ produk.stok }} unit)</span>
+                <span class="stock-status out-of-stock">Stok Habis</span>
             {% endif %}
         </div>
-        
-        <div class="section">
-            <h3>📝 Deskripsi</h3>
-            <p>{{ produk.deskripsi }}</p>
+
+        <div class="product-description">
+            {{ produk.deskripsi }}
         </div>
-        
-        <div class="section">
-            <h3>🌱 Cara Perawatan</h3>
-            <p>{{ produk.perawatan }}</p>
-        </div>
-        
+
+        {% if user.is_authenticated and not user.is_staff and not user.is_superuser and produk.stok > 0 %}
+        <form method="post" action="{% url 'add_to_cart' produk.id %}">
+            {% csrf_token %}
+            <div class="quantity-control">
+                <button type="button" class="quantity-btn" onclick="decrementQuantity()">-</button>
+                <input type="number" name="quantity" value="1" min="1" max="{{ produk.stok }}" class="quantity-input" id="quantityInput">
+                <button type="button" class="quantity-btn" onclick="incrementQuantity()">+</button>
+            </div>
+            <div class="product-actions">
+                <button type="submit" class="btn">
+                    🛒 Tambah ke Keranjang
+                </button>
+            </div>
+        </form>
+        {% elif user.is_staff or user.is_superuser %}
         <div class="product-actions">
-            {% if produk.stok > 0 %}
-            <button class="btn-primary">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="9" cy="21" r="1"></circle>
-                    <circle cx="20" cy="21" r="1"></circle>
-                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-                </svg>
-                Tambah ke Keranjang
-            </button>
-            {% endif %}
-            <a href="{% url 'produk_list' %}" class="btn-secondary">Kembali ke Katalog</a>
+            <a href="{% url 'produk_update' produk.id %}" class="btn btn-secondary">
+                ✏️ Edit Produk
+            </a>
+            <a href="{% url 'produk_delete' produk.id %}" class="btn btn-danger">
+                🗑️ Hapus Produk
+            </a>
+        </div>
+        {% elif not user.is_authenticated %}
+        <div class="product-actions">
+            <a href="{% url 'login' %}" class="btn">
+                🔑 Login untuk Berbelanja
+            </a>
+        </div>
+        {% endif %}
+
+        <div class="product-features">
+            <h3>Fitur & Keunggulan</h3>
+            <ul class="feature-list">
+                <li class="feature-item">
+                    <div class="feature-icon">🌱</div>
+                    <span>Tanaman Berkualitas Premium</span>
+                </li>
+                <li class="feature-item">
+                    <div class="feature-icon">🚚</div>
+                    <span>Pengiriman Aman & Cepat</span>
+                </li>
+                <li class="feature-item">
+                    <div class="feature-icon">💯</div>
+                    <span>Garansi Hidup 7 Hari</span>
+                </li>
+                <li class="feature-item">
+                    <div class="feature-icon">📝</div>
+                    <span>Panduan Perawatan Lengkap</span>
+                </li>
+            </ul>
         </div>
     </div>
 </div>
 
-{% if related_products %}
-<div class="related-products">
-    <h2>Produk Serupa</h2>
-    <div class="related-grid">
-        {% for related in related_products %}
-        <div class="related-card">
-            <div class="related-image" style="background-image: url('{{ related.get_default_image }}');"></div>
-            <div class="related-info">
-                <h4>{{ related.nama }}</h4>
-                <div class="related-price">{{ related.get_formatted_harga }}</div>
-                <p>{{ related.deskripsi|truncatewords:10 }}</p>
-                <a href="{% url 'produk_detail' related.pk %}" class="related-btn">Lihat Detail</a>
-            </div>
-        </div>
-        {% endfor %}
-    </div>
-</div>
-{% endif %}
+<script>
+function incrementQuantity() {
+    const input = document.getElementById('quantityInput');
+    const max = parseInt(input.max);
+    const currentValue = parseInt(input.value);
+    if (currentValue < max) {
+        input.value = currentValue + 1;
+    }
+}
+
+function decrementQuantity() {
+    const input = document.getElementById('quantityInput');
+    const currentValue = parseInt(input.value);
+    if (currentValue > 1) {
+        input.value = currentValue - 1;
+    }
+}
+
+// Prevent manual input of invalid values
+document.getElementById('quantityInput').addEventListener('change', function() {
+    const max = parseInt(this.max);
+    const value = parseInt(this.value);
+    if (value > max) {
+        this.value = max;
+    } else if (value < 1) {
+        this.value = 1;
+    }
+});
+</script>
 {% endblock %}

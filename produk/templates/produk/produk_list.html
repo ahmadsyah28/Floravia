@@ -6,162 +6,241 @@
 {% block extra_css %}
 <style>
     .category {
-        margin-bottom: 3rem;
+        margin-bottom: 4rem;
+        animation: fadeIn 0.6s ease-out;
     }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
     .category h2 {
-        color: #2c6e49;
-        border-bottom: 2px solid #4c956c;
-        padding-bottom: 0.5rem;
-        margin-bottom: 1.5rem;
+        color: var(--primary-dark);
+        border-bottom: 2px solid var(--primary);
+        padding-bottom: 1rem;
+        margin-bottom: 2rem;
         display: flex;
         align-items: center;
         justify-content: space-between;
+        font-size: 2rem;
     }
+
     .category-count {
         font-size: 0.9rem;
-        background-color: #4c956c;
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
         color: white;
-        padding: 0.3rem 0.8rem;
-        border-radius: 15px;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-weight: 600;
+        box-shadow: var(--shadow);
     }
+
     .product-list {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
         gap: 2rem;
     }
+
     .product-card {
-        background-color: white;
-        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: var(--radius);
         overflow: hidden;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        transition: transform 0.3s;
+        box-shadow: var(--shadow);
+        transition: var(--transition);
         position: relative;
     }
+
     .product-card:hover {
         transform: translateY(-5px);
+        box-shadow: var(--shadow-strong);
     }
+
     .product-image {
-        height: 200px;
+        height: 250px;
         background-position: center;
         background-size: cover;
+        position: relative;
     }
+
+    .product-image::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 50%;
+        background: linear-gradient(to top, rgba(0,0,0,0.5), transparent);
+    }
+
     .product-info {
         padding: 1.5rem;
+        position: relative;
     }
+
     .product-info h3 {
-        margin-top: 0;
-        color: #2c6e49;
-        margin-bottom: 0.5rem;
+        margin: 0 0 1rem 0;
+        color: var(--primary-dark);
+        font-size: 1.3rem;
     }
+
     .product-price {
-        font-size: 1.2rem;
+        font-size: 1.4rem;
         font-weight: bold;
-        color: #4c956c;
+        color: var(--primary);
         margin: 0.5rem 0;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
     }
+
+    .product-price::before {
+        content: 'Rp';
+        font-size: 1rem;
+        color: var(--text-light);
+    }
+
     .product-stock {
         font-size: 0.9rem;
-        color: #666;
+        color: var(--text-light);
         margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
     }
+
     .stock-low {
-        color: #dc3545;
+        color: #e74c3c;
         font-weight: bold;
     }
+
     .stock-out {
-        color: #dc3545;
+        color: #e74c3c;
         font-weight: bold;
     }
+
     .product-actions {
         display: flex;
-        gap: 0.5rem;
-        margin-top: 1rem;
-        flex-wrap: wrap;
+        gap: 0.8rem;
+        margin-top: 1.5rem;
     }
-    .btn-sm {
-        padding: 0.5rem 1rem;
+
+    .product-actions .btn {
+        flex: 1;
+        text-align: center;
+        padding: 0.8rem;
         font-size: 0.9rem;
-        flex: 1;
-        text-align: center;
     }
-    .btn-cart {
-        background-color: #28a745;
-        color: white;
-        text-decoration: none;
-        padding: 0.5rem 1rem;
-        border-radius: 5px;
-        transition: background-color 0.3s;
-        text-align: center;
-        flex: 1;
-    }
-    .btn-cart:hover {
-        background-color: #218838;
-    }
-    .btn-cart:disabled {
-        background-color: #6c757d;
-        cursor: not-allowed;
-    }
-    .empty-category {
-        text-align: center;
-        padding: 2rem;
-        color: #666;
-        background-color: white;
-        border-radius: 10px;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    }
+
     .filter-bar {
-        background-color: white;
-        padding: 1rem;
-        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.95);
+        padding: 1.5rem;
+        border-radius: var(--radius);
         margin-bottom: 2rem;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         display: flex;
         justify-content: space-between;
         align-items: center;
-        flex-wrap: wrap;
-        gap: 1rem;
+        box-shadow: var(--shadow);
     }
-    .admin-badge {
-        background-color: #ffc107;
-        color: #000;
-        padding: 0.2rem 0.5rem;
-        border-radius: 3px;
-        font-size: 0.7rem;
-        font-weight: bold;
-        margin-left: 0.5rem;
+
+    .filter-bar strong {
+        color: var(--primary-dark);
+        font-size: 1.1rem;
     }
+
     .login-prompt {
-        background-color: #e7f3ff;
-        border: 1px solid #b3d7ff;
-        color: #004085;
-        padding: 1rem;
-        border-radius: 5px;
+        background: rgba(255, 255, 255, 0.95);
+        padding: 1.5rem;
+        border-radius: var(--radius);
         margin-bottom: 2rem;
         text-align: center;
+        box-shadow: var(--shadow);
+        border-left: 4px solid var(--primary);
+    }
+
+    .login-prompt strong {
+        color: var(--primary-dark);
+        margin-right: 0.5rem;
+    }
+
+    .login-prompt a {
+        color: var(--primary);
+        text-decoration: none;
+        font-weight: 600;
+        transition: var(--transition);
+    }
+
+    .login-prompt a:hover {
+        color: var(--primary-dark);
+        text-decoration: underline;
+    }
+
+    .empty-category {
+        text-align: center;
+        padding: 3rem;
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: var(--radius);
+        margin-bottom: 2rem;
+    }
+
+    .empty-category h3 {
+        color: var(--primary-dark);
+        margin-bottom: 1rem;
+    }
+
+    .empty-category p {
+        color: var(--text-light);
+        margin-bottom: 1.5rem;
+    }
+
+    @media (max-width: 768px) {
+        .category h2 {
+            font-size: 1.5rem;
+            flex-direction: column;
+            gap: 1rem;
+            align-items: flex-start;
+        }
+
+        .filter-bar {
+            flex-direction: column;
+            gap: 1rem;
+            text-align: center;
+        }
+
+        .product-list {
+            gap: 1.5rem;
+        }
+
+        .product-actions {
+            flex-direction: column;
+        }
     }
 </style>
 {% endblock %}
 
 {% block content %}
-<h1>Katalog Produk Tanaman Hias</h1>
-
 <div class="filter-bar">
     <div>
         <strong>Total Produk: {{ indoor_products.count|add:outdoor_products.count|add:kaktus_products.count }}</strong>
     </div>
     <div>
         {% if user.is_staff or user.is_superuser %}
-            <a href="{% url 'produk_create' %}" class="btn">+ Tambah Produk Baru</a>
+            <a href="{% url 'produk_create' %}" class="btn">✨ Tambah Produk Baru</a>
             <span class="admin-badge">ADMIN MODE</span>
         {% elif user.is_authenticated %}
             <a href="{% url 'cart_detail' %}" class="btn">🛒 Lihat Keranjang</a>
         {% else %}
-            <a href="{% url 'login' %}" class="btn">Login untuk Berbelanja</a>
+            <a href="{% url 'login' %}" class="btn">🔑 Login untuk Berbelanja</a>
         {% endif %}
     </div>
 </div>
 
-<!-- Show login prompt for non-authenticated users -->
 {% if not user.is_authenticated %}
 <div class="login-prompt">
     <strong>🔒 Ingin berbelanja?</strong> 
@@ -174,58 +253,60 @@
 <div class="category">
     <h2>
         🏠 Tanaman Indoor
-        <span class="category-count">{{ indoor_products.count }} produk</span>
+        <span class="category-count">{{ indoor_products.count }} Produk</span>
     </h2>
     {% if indoor_products %}
-        <div class="product-list">
-            {% for produk in indoor_products %}
-            <div class="product-card">
-                <div class="product-image" style="background-image: url('{{ produk.get_image_url }}');"></div>
-                <div class="product-info">
-                    <h3>{{ produk.nama }}</h3>
-                    <div class="product-price">{{ produk.get_formatted_harga }}</div>
-                    <div class="product-stock">
-                        {% if produk.stok == 0 %}
-                            <span class="stock-out">Stok habis</span>
-                        {% elif produk.stok <= 5 %}
-                            <span class="stock-low">Stok tersisa: {{ produk.stok }}</span>
-                        {% else %}
-                            Stok: {{ produk.stok }}
-                        {% endif %}
-                    </div>
-                    <p>{{ produk.deskripsi|truncatewords:15 }}</p>
-                    
-                    <div class="product-actions">
-                        <a href="{% url 'produk_detail' produk.pk %}" class="btn btn-sm">Detail</a>
-                        
-                        {% if user.is_staff or user.is_superuser %}
-                            <!-- Admin buttons -->
-                            <a href="{% url 'produk_update' produk.pk %}" class="btn btn-secondary btn-sm">Edit</a>
-                            <a href="{% url 'produk_delete' produk.pk %}" class="btn btn-danger btn-sm">Hapus</a>
-                        {% elif user.is_authenticated %}
-                            <!-- Regular user button -->
-                            {% if produk.stok > 0 %}
-                                <a href="{% url 'add_to_cart' produk.pk %}" class="btn-cart">🛒 Tambah ke Keranjang</a>
-                            {% else %}
-                                <span class="btn-cart" style="background-color: #6c757d; cursor: not-allowed;">Stok Habis</span>
-                            {% endif %}
-                        {% else %}
-                            <!-- Non-authenticated user -->
-                            <a href="{% url 'login' %}" class="btn-cart">Login untuk Beli</a>
-                        {% endif %}
-                    </div>
+    <div class="product-list">
+        {% for product in indoor_products %}
+        <div class="product-card">
+            <div class="product-image" style="background-image: url('{{ product.get_image_url }}')"></div>
+            <div class="product-info">
+                <h3>{{ product.nama }}</h3>
+                <div class="product-price">{{ product.harga }}</div>
+                <div class="product-stock">
+                    📦 Stok: 
+                    {% if product.stok > 10 %}
+                        <span>{{ product.stok }} tersedia</span>
+                    {% elif product.stok > 0 %}
+                        <span class="stock-low">Sisa {{ product.stok }}</span>
+                    {% else %}
+                        <span class="stock-out">Stok Habis</span>
+                    {% endif %}
+                </div>
+                <div class="product-actions">
+                    <a href="{% url 'produk_detail' product.id %}" class="btn">
+                        🔍 Detail
+                    </a>
+                    {% if user.is_staff or user.is_superuser %}
+                    <a href="{% url 'produk_update' product.id %}" class="btn btn-secondary">
+                        ✏️ Edit
+                    </a>
+                    <a href="{% url 'produk_delete' product.id %}" class="btn btn-danger">
+                        🗑️ Hapus
+                    </a>
+                    {% elif user.is_authenticated and product.stok > 0 %}
+                    <form method="post" action="{% url 'add_to_cart' product.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn">
+                            🛒 Tambah ke Keranjang
+                        </button>
+                    </form>
+                    {% endif %}
                 </div>
             </div>
-            {% endfor %}
         </div>
+        {% endfor %}
+    </div>
     {% else %}
-        <div class="empty-category">
-            <p>Belum ada produk tanaman indoor. 
-            {% if user.is_staff or user.is_superuser %}
-                <a href="{% url 'produk_create' %}">Tambah produk pertama?</a>
-            {% endif %}
-            </p>
-        </div>
+    <div class="empty-category">
+        <h3>Belum ada produk Indoor</h3>
+        <p>Segera hadir tanaman indoor pilihan untuk mempercantik ruangan Anda.</p>
+        {% if user.is_staff or user.is_superuser %}
+        <a href="{% url 'produk_create' %}" class="btn">
+            ✨ Tambah Produk Indoor
+        </a>
+        {% endif %}
+    </div>
     {% endif %}
 </div>
 
@@ -233,58 +314,60 @@
 <div class="category">
     <h2>
         🌳 Tanaman Outdoor
-        <span class="category-count">{{ outdoor_products.count }} produk</span>
+        <span class="category-count">{{ outdoor_products.count }} Produk</span>
     </h2>
     {% if outdoor_products %}
-        <div class="product-list">
-            {% for produk in outdoor_products %}
-            <div class="product-card">
-                <div class="product-image" style="background-image: url('{{ produk.get_image_url }}');"></div>
-                <div class="product-info">
-                    <h3>{{ produk.nama }}</h3>
-                    <div class="product-price">{{ produk.get_formatted_harga }}</div>
-                    <div class="product-stock">
-                        {% if produk.stok == 0 %}
-                            <span class="stock-out">Stok habis</span>
-                        {% elif produk.stok <= 5 %}
-                            <span class="stock-low">Stok tersisa: {{ produk.stok }}</span>
-                        {% else %}
-                            Stok: {{ produk.stok }}
-                        {% endif %}
-                    </div>
-                    <p>{{ produk.deskripsi|truncatewords:15 }}</p>
-                    
-                    <div class="product-actions">
-                        <a href="{% url 'produk_detail' produk.pk %}" class="btn btn-sm">Detail</a>
-                        
-                        {% if user.is_staff or user.is_superuser %}
-                            <!-- Admin buttons -->
-                            <a href="{% url 'produk_update' produk.pk %}" class="btn btn-secondary btn-sm">Edit</a>
-                            <a href="{% url 'produk_delete' produk.pk %}" class="btn btn-danger btn-sm">Hapus</a>
-                        {% elif user.is_authenticated %}
-                            <!-- Regular user button -->
-                            {% if produk.stok > 0 %}
-                                <a href="{% url 'add_to_cart' produk.pk %}" class="btn-cart">🛒 Tambah ke Keranjang</a>
-                            {% else %}
-                                <span class="btn-cart" style="background-color: #6c757d; cursor: not-allowed;">Stok Habis</span>
-                            {% endif %}
-                        {% else %}
-                            <!-- Non-authenticated user -->
-                            <a href="{% url 'login' %}" class="btn-cart">Login untuk Beli</a>
-                        {% endif %}
-                    </div>
+    <div class="product-list">
+        {% for product in outdoor_products %}
+        <div class="product-card">
+            <div class="product-image" style="background-image: url('{{ product.get_image_url }}')"></div>
+            <div class="product-info">
+                <h3>{{ product.nama }}</h3>
+                <div class="product-price">{{ product.harga }}</div>
+                <div class="product-stock">
+                    📦 Stok: 
+                    {% if product.stok > 10 %}
+                        <span>{{ product.stok }} tersedia</span>
+                    {% elif product.stok > 0 %}
+                        <span class="stock-low">Sisa {{ product.stok }}</span>
+                    {% else %}
+                        <span class="stock-out">Stok Habis</span>
+                    {% endif %}
+                </div>
+                <div class="product-actions">
+                    <a href="{% url 'produk_detail' product.id %}" class="btn">
+                        🔍 Detail
+                    </a>
+                    {% if user.is_staff or user.is_superuser %}
+                    <a href="{% url 'produk_update' product.id %}" class="btn btn-secondary">
+                        ✏️ Edit
+                    </a>
+                    <a href="{% url 'produk_delete' product.id %}" class="btn btn-danger">
+                        🗑️ Hapus
+                    </a>
+                    {% elif user.is_authenticated and product.stok > 0 %}
+                    <form method="post" action="{% url 'add_to_cart' product.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn">
+                            🛒 Tambah ke Keranjang
+                        </button>
+                    </form>
+                    {% endif %}
                 </div>
             </div>
-            {% endfor %}
         </div>
+        {% endfor %}
+    </div>
     {% else %}
-        <div class="empty-category">
-            <p>Belum ada produk tanaman outdoor.
-            {% if user.is_staff or user.is_superuser %}
-                <a href="{% url 'produk_create' %}">Tambah produk pertama?</a>
-            {% endif %}
-            </p>
-        </div>
+    <div class="empty-category">
+        <h3>Belum ada produk Outdoor</h3>
+        <p>Segera hadir tanaman outdoor pilihan untuk mempercantik taman Anda.</p>
+        {% if user.is_staff or user.is_superuser %}
+        <a href="{% url 'produk_create' %}" class="btn">
+            ✨ Tambah Produk Outdoor
+        </a>
+        {% endif %}
+    </div>
     {% endif %}
 </div>
 
@@ -292,70 +375,60 @@
 <div class="category">
     <h2>
         🌵 Kaktus & Sukulen
-        <span class="category-count">{{ kaktus_products.count }} produk</span>
+        <span class="category-count">{{ kaktus_products.count }} Produk</span>
     </h2>
     {% if kaktus_products %}
-        <div class="product-list">
-            {% for produk in kaktus_products %}
-            <div class="product-card">
-                <div class="product-image" style="background-image: url('{{ produk.get_image_url }}');"></div>
-                <div class="product-info">
-                    <h3>{{ produk.nama }}</h3>
-                    <div class="product-price">{{ produk.get_formatted_harga }}</div>
-                    <div class="product-stock">
-                        {% if produk.stok == 0 %}
-                            <span class="stock-out">Stok habis</span>
-                        {% elif produk.stok <= 5 %}
-                            <span class="stock-low">Stok tersisa: {{ produk.stok }}</span>
-                        {% else %}
-                            Stok: {{ produk.stok }}
-                        {% endif %}
-                    </div>
-                    <p>{{ produk.deskripsi|truncatewords:15 }}</p>
-                    
-                    <div class="product-actions">
-                        <a href="{% url 'produk_detail' produk.pk %}" class="btn btn-sm">Detail</a>
-                        
-                        {% if user.is_staff or user.is_superuser %}
-                            <!-- Admin buttons -->
-                            <a href="{% url 'produk_update' produk.pk %}" class="btn btn-secondary btn-sm">Edit</a>
-                            <a href="{% url 'produk_delete' produk.pk %}" class="btn btn-danger btn-sm">Hapus</a>
-                        {% elif user.is_authenticated %}
-                            <!-- Regular user button -->
-                            {% if produk.stok > 0 %}
-                                <a href="{% url 'add_to_cart' produk.pk %}" class="btn-cart">🛒 Tambah ke Keranjang</a>
-                            {% else %}
-                                <span class="btn-cart" style="background-color: #6c757d; cursor: not-allowed;">Stok Habis</span>
-                            {% endif %}
-                        {% else %}
-                            <!-- Non-authenticated user -->
-                            <a href="{% url 'login' %}" class="btn-cart">Login untuk Beli</a>
-                        {% endif %}
-                    </div>
+    <div class="product-list">
+        {% for product in kaktus_products %}
+        <div class="product-card">
+            <div class="product-image" style="background-image: url('{{ product.get_image_url }}')"></div>
+            <div class="product-info">
+                <h3>{{ product.nama }}</h3>
+                <div class="product-price">{{ product.harga }}</div>
+                <div class="product-stock">
+                    📦 Stok: 
+                    {% if product.stok > 10 %}
+                        <span>{{ product.stok }} tersedia</span>
+                    {% elif product.stok > 0 %}
+                        <span class="stock-low">Sisa {{ product.stok }}</span>
+                    {% else %}
+                        <span class="stock-out">Stok Habis</span>
+                    {% endif %}
+                </div>
+                <div class="product-actions">
+                    <a href="{% url 'produk_detail' product.id %}" class="btn">
+                        🔍 Detail
+                    </a>
+                    {% if user.is_staff or user.is_superuser %}
+                    <a href="{% url 'produk_update' product.id %}" class="btn btn-secondary">
+                        ✏️ Edit
+                    </a>
+                    <a href="{% url 'produk_delete' product.id %}" class="btn btn-danger">
+                        🗑️ Hapus
+                    </a>
+                    {% elif user.is_authenticated and product.stok > 0 %}
+                    <form method="post" action="{% url 'add_to_cart' product.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn">
+                            🛒 Tambah ke Keranjang
+                        </button>
+                    </form>
+                    {% endif %}
                 </div>
             </div>
-            {% endfor %}
         </div>
+        {% endfor %}
+    </div>
     {% else %}
-        <div class="empty-category">
-            <p>Belum ada produk kaktus & sukulen.
-            {% if user.is_staff or user.is_superuser %}
-                <a href="{% url 'produk_create' %}">Tambah produk pertama?</a>
-            {% endif %}
-            </p>
-        </div>
+    <div class="empty-category">
+        <h3>Belum ada Kaktus & Sukulen</h3>
+        <p>Segera hadir koleksi kaktus dan sukulen pilihan untuk dekorasi minimalis Anda.</p>
+        {% if user.is_staff or user.is_superuser %}
+        <a href="{% url 'produk_create' %}" class="btn">
+            ✨ Tambah Kaktus & Sukulen
+        </a>
+        {% endif %}
+    </div>
     {% endif %}
 </div>
-
-{% if not indoor_products and not outdoor_products and not kaktus_products %}
-<div class="admin-controls">
-    <h3>Belum Ada Produk</h3>
-    <p>Katalog masih kosong.</p>
-    {% if user.is_staff or user.is_superuser %}
-        <a href="{% url 'produk_create' %}" class="btn">Tambah Produk Pertama</a>
-    {% else %}
-        <p>Silakan hubungi admin untuk menambahkan produk.</p>
-    {% endif %}
-</div>
-{% endif %}
 {% endblock %}

@@ -1,4 +1,13 @@
 # 🌱 Floravia - Setup Guide untuk CRUD Produk
+# 📽️ Presentasi dan Dokumentasi
+
+Berikut ini adalah link video dan file presentasi dari proyek online shop tanaman hias.
+
+## 🎥 Link Video Presentasi
+[Tonton Video](https://youtu.be/rDWdCjN1PAM)
+
+## 📊 Link PPT Presentasi
+[Liat PPT](https://drive.google.com/drive/folders/1HwVH97N1aBW4GDWmuAfV4KSc8BC_0DQI?usp=sharing)
 
 ## Langkah 1: Persiapan File Structure
 

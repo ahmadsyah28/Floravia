@@ -6,8 +6,8 @@
 {% block extra_css %}
 <style>
     .hero {
-        background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://source.unsplash.com/random/1200x700/?plants');
-        height: 60vh;
+        background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('https://images.unsplash.com/photo-1545165375-1b744b9ed444?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=800&ixid=MnwxfDB8MXxyYW5kb218MHx8aW5kb29yLXBsYW50c3x8fHx8fDE2ODI0OTU5ODU&ixlib=rb-4.0.3&q=80&w=1600');
+        height: 70vh;
         background-position: center;
         background-repeat: no-repeat;
         background-size: cover;
@@ -17,74 +17,267 @@
         align-items: center;
         text-align: center;
         color: white;
-        border-radius: 10px;
-        margin-bottom: 3rem;
+        border-radius: var(--radius);
+        margin: -2rem -2rem 3rem -2rem;
+        overflow: hidden;
     }
+
+    .hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.7));
+    }
+
     .hero-content {
         max-width: 800px;
         padding: 2rem;
+        position: relative;
+        z-index: 1;
+        animation: fadeInUp 1s ease-out;
     }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
     .hero h1 {
-        font-size: 3rem;
+        font-size: 3.5rem;
         margin-bottom: 1rem;
+        font-weight: 800;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
     }
+
     .hero p {
         font-size: 1.2rem;
         margin-bottom: 2rem;
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
     }
+
     .features {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
         gap: 2rem;
         margin: 3rem 0;
     }
+
     .feature {
-        background-color: white;
+        background: rgba(255, 255, 255, 0.9);
         padding: 2rem;
-        border-radius: 10px;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
         text-align: center;
+        transition: var(--transition);
+        position: relative;
+        overflow: hidden;
     }
+
+    .feature::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+        opacity: 0;
+        transition: var(--transition);
+    }
+
+    .feature:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow-strong);
+    }
+
+    .feature:hover::before {
+        opacity: 1;
+    }
+
     .feature h3 {
-        color: #2c6e49;
+        color: var(--primary-dark);
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        font-size: 1.5rem;
+    }
+
+    .feature p {
+        color: var(--text-light);
+        line-height: 1.6;
+    }
+
+    .featured-products {
+        margin-top: 4rem;
+    }
+
+    .section-header {
+        text-align: center;
+        margin-bottom: 3rem;
+        position: relative;
+    }
+
+    .section-header h2 {
+        color: var(--primary-dark);
+        font-size: 2.5rem;
         margin-bottom: 1rem;
     }
-    .featured-products {
-        margin-top: 3rem;
+
+    .section-header p {
+        color: var(--text-light);
+        max-width: 600px;
+        margin: 0 auto;
     }
+
     .product-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
         gap: 2rem;
         margin-top: 2rem;
     }
+
     .product-card {
-        background-color: white;
-        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: var(--radius);
         overflow: hidden;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        transition: transform 0.3s;
+        box-shadow: var(--shadow);
+        transition: var(--transition);
+        position: relative;
     }
+
     .product-card:hover {
         transform: translateY(-5px);
+        box-shadow: var(--shadow-strong);
     }
+
     .product-image {
-        height: 200px;
+        height: 250px;
         background-position: center;
         background-size: cover;
+        position: relative;
     }
+
+    .product-image::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 50%;
+        background: linear-gradient(to top, rgba(0,0,0,0.5), transparent);
+    }
+
     .product-info {
         padding: 1.5rem;
+        position: relative;
     }
+
     .product-info h3 {
         margin-top: 0;
-        color: #2c6e49;
+        color: var(--primary-dark);
+        font-size: 1.3rem;
+        margin-bottom: 0.5rem;
     }
+
     .product-price {
-        font-size: 1.2rem;
+        font-size: 1.4rem;
         font-weight: bold;
-        color: #4c956c;
+        color: var(--primary);
         margin: 0.5rem 0;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .product-price::before {
+        content: 'Rp';
+        font-size: 1rem;
+        color: var(--text-light);
+    }
+
+    .admin-controls {
+        background: rgba(255, 255, 255, 0.9);
+        padding: 2rem;
+        border-radius: var(--radius);
+        margin-bottom: 3rem;
+        text-align: center;
+        box-shadow: var(--shadow);
+        border-left: 4px solid var(--primary);
+    }
+
+    .admin-controls h3 {
+        color: var(--primary-dark);
+        margin-bottom: 1rem;
+        font-size: 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+
+    .admin-controls p {
+        color: var(--text-light);
+        margin-bottom: 1.5rem;
+    }
+
+    .admin-controls .btn {
+        margin: 0 0.5rem;
+    }
+
+    .about-section {
+        text-align: center;
+        margin: 4rem 0;
+        padding: 2rem;
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+    }
+
+    .about-section h2 {
+        color: var(--primary-dark);
+        margin-bottom: 1rem;
+        font-size: 2rem;
+    }
+
+    .about-section p {
+        color: var(--text-light);
+        max-width: 800px;
+        margin: 0 auto;
+        line-height: 1.8;
+    }
+
+    @media (max-width: 768px) {
+        .hero {
+            height: 60vh;
+            margin: -1.5rem -1.5rem 2rem -1.5rem;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+        }
+
+        .features {
+            gap: 1.5rem;
+        }
+
+        .product-grid {
+            gap: 1.5rem;
+        }
+
+        .section-header h2 {
+            font-size: 2rem;
+        }
     }
 </style>
 {% endblock %}
@@ -93,61 +286,74 @@
 <div class="hero">
     <div class="hero-content">
         <h1>Selamat Datang di Floravia</h1>
-        <p>Toko tanaman hias terlengkap untuk mempercantik rumah dan taman Anda</p>
-        <a href="{% url 'produk_list' %}" class="btn">Lihat Koleksi Kami</a>
+        <p>Temukan keindahan alam dalam setiap sudut rumah Anda dengan koleksi tanaman hias pilihan kami</p>
+        <a href="{% url 'produk_list' %}" class="btn">
+            🌿 Jelajahi Koleksi Kami
+        </a>
     </div>
 </div>
 
+{% if user.is_staff or user.is_superuser %}
 <div class="admin-controls">
     <h3>🌱 Panel Manajemen</h3>
-    <p>Kelola produk tanaman hias Anda dengan mudah</p>
-    <a href="{% url 'produk_create' %}" class="btn">Tambah Produk Baru</a>
-    <a href="/admin/" class="btn btn-secondary">Admin Dashboard</a>
+    <p>Kelola koleksi tanaman hias Anda dengan mudah dan efisien</p>
+    <a href="{% url 'produk_create' %}" class="btn">
+        ✨ Tambah Produk Baru
+    </a>
+    <a href="/admin/" class="btn btn-secondary">
+        ⚙️ Admin Dashboard
+    </a>
 </div>
+{% endif %}
 
-<h2>Tentang Floravia</h2>
-<p>Floravia menyediakan berbagai pilihan tanaman hias berkualitas untuk mempercantik ruangan dan taman Anda. Kami berkomitmen untuk menyediakan tanaman terbaik dengan perawatan yang mudah dan harga yang terjangkau.</p>
+<div class="about-section">
+    <h2>Tentang Floravia</h2>
+    <p>
+        Floravia hadir untuk membantu Anda menciptakan ruang hidup yang lebih segar, indah, dan sehat dengan koleksi tanaman hias berkualitas. 
+        Kami berkomitmen untuk menyediakan tanaman terbaik dengan perawatan yang mudah dan harga yang terjangkau, 
+        didukung oleh tim ahli yang siap membantu Anda dalam memilih dan merawat tanaman.
+    </p>
+</div>
 
 <div class="features">
     <div class="feature">
         <h3>🏠 Tanaman Indoor</h3>
-        <p>Koleksi tanaman indoor kami akan membuat ruangan Anda lebih segar, indah, dan menyehatkan.</p>
+        <p>Koleksi tanaman indoor pilihan untuk menyegarkan dan memperindah ruangan Anda. Cocok untuk apartemen dan ruang kerja.</p>
     </div>
     <div class="feature">
         <h3>🌳 Tanaman Outdoor</h3>
-        <p>Percantik taman Anda dengan berbagai pilihan tanaman outdoor yang menawan.</p>
+        <p>Beragam pilihan tanaman outdoor untuk menciptakan taman impian yang asri dan menyejukkan.</p>
     </div>
     <div class="feature">
         <h3>🌵 Kaktus & Sukulen</h3>
-        <p>Tanaman dekoratif yang mudah dirawat dan tahan lama untuk mempercantik sudut rumah Anda.</p>
+        <p>Tanaman dekoratif yang mudah dirawat dan tahan lama, sempurna untuk pemula dan area dengan sinar matahari berlimpah.</p>
+    </div>
+    <div class="feature">
+        <h3>🎁 Layanan Spesial</h3>
+        <p>Konsultasi gratis, pengiriman aman, dan garansi hidup untuk setiap pembelian tanaman di Floravia.</p>
     </div>
 </div>
 
 {% if featured_products %}
 <div class="featured-products">
-    <h2>Produk Unggulan</h2>
+    <div class="section-header">
+        <h2>✨ Produk Unggulan</h2>
+        <p>Temukan tanaman hias pilihan yang sedang populer dan cocok untuk berbagai ruangan</p>
+    </div>
     <div class="product-grid">
-        {% for produk in featured_products %}
+        {% for product in featured_products %}
         <div class="product-card">
-            <div class="product-image" style="background-image: url('{{ produk.get_image_url }}');"></div>
+            <div class="product-image" style="background-image: url('{{ product.get_image_url }}')"></div>
             <div class="product-info">
-                <h3>{{ produk.nama }}</h3>
-                <div class="product-price">{{ produk.get_formatted_harga }}</div>
-                <p>{{ produk.deskripsi|truncatewords:15 }}</p>
-                <a href="{% url 'produk_detail' produk.pk %}" class="btn">Lihat Detail</a>
+                <h3>{{ product.nama }}</h3>
+                <div class="product-price">{{ product.harga }}</div>
+                <a href="{% url 'produk_detail' product.id %}" class="btn">
+                    Lihat Detail
+                </a>
             </div>
         </div>
         {% endfor %}
     </div>
-    <div style="text-align: center; margin-top: 2rem;">
-        <a href="{% url 'produk_list' %}" class="btn">Lihat Semua Produk</a>
-    </div>
-</div>
-{% else %}
-<div class="admin-controls">
-    <h3>Belum Ada Produk</h3>
-    <p>Mulai dengan menambahkan produk pertama Anda!</p>
-    <a href="{% url 'produk_create' %}" class="btn">Tambah Produk Pertama</a>
 </div>
 {% endif %}
 {% endblock %}

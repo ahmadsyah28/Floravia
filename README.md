@@ -1,4 +1,10 @@
 # 🌱 Floravia - Setup Guide untuk CRUD Produk
+
+## 👥 Anggota Tim
+- **Muhammad Bintang Indra Hidayat** - NPM: 2208107010023
+- **Ahmad Syah Ramadhan** - NPM: 2208107010033
+- **Indriani Miza Alfiyanti** - NPM: 2208107010026
+
 # 📽️ Presentasi dan Dokumentasi
 
 Berikut ini adalah link video dan file presentasi dari proyek online shop tanaman hias.
@@ -225,7 +231,7 @@ python manage.py runserver
 - **Admin Panel**: http://127.0.0.1:8000/admin/
 - **Kontak**: http://127.0.0.1:8000/kontak/
 
-## Fitur yang Tersedia:
+## 🚀 Fitur yang Tersedia:
 
 ### ✅ CRUD Operations:
 - **Create**: Form tambah produk dengan validasi
@@ -249,6 +255,15 @@ python manage.py runserver
 - Model relationships
 - Auto-generated images dari Unsplash
 
+## 🛠 Teknologi yang Digunakan:
+- **Django** - Python web framework
+- **SQLite** - Database default untuk development
+- **HTML/CSS** - Frontend templating
+- **Bootstrap** - CSS framework untuk responsive design
+
+## 🎯 Tentang Proyek:
+Floravia adalah aplikasi web e-commerce yang khusus menjual tanaman hias. Proyek ini dikembangkan menggunakan Django framework dengan fitur lengkap CRUD (Create, Read, Update, Delete) untuk manajemen produk tanaman. Aplikasi ini dilengkapi dengan kategori tanaman (indoor, outdoor, kaktus), informasi perawatan, dan interface yang user-friendly.
+
 ## Troubleshooting:
 
 1. **Template not found**: Pastikan struktur direktori template benar
@@ -256,7 +271,7 @@ python manage.py runserver
 3. **Database error**: Jalankan `python manage.py migrate`
 4. **Static files**: Untuk production, setup static files dengan `python manage.py collectstatic`
 
-## Pengembangan Selanjutnya:
+## 📈 Pengembangan Selanjutnya:
 
 - Tambah authentication untuk protect CRUD operations
 - Upload gambar ke server instead of URL
@@ -264,3 +279,6 @@ python manage.py runserver
 - Review dan rating system
 - Email notifications untuk order
 - Payment gateway integration
+
+## 📞 Kontak:
+Jika ada pertanyaan atau masalah dalam setup, silakan hubungi anggota tim pengembang atau buat issue di repository ini.
